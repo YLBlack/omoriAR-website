@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>OMORI Arabic Translation — download & install</title>
+<meta name="description" content="The full Arabic localization of OMORI — all text, menus, battle UI, images and a rebuilt font. Download and install guide inside.">
+<meta property="og:title" content="OMORI Arabic Translation">
+<meta property="og:description" content="Full Arabic localization of OMORI — text, UI, images and font. Free fan patch.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+<link rel="preload" href="../assets/fonts/OMORI_GAME2.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+  /* small LTR overrides for the English page */
+  body { letter-spacing: .2px; }
+  .hero__omori { letter-spacing: 0; } /* never letter-space Arabic — it breaks cursive joining */
+  /* the title stroke grows from the left on LTR (everything else mirrors via logical CSS) */
+  .section-title::after { transform-origin: left; }
+  /* credits mirror: role left, name right (Arabic page has name right via order:-1) */
+  .cr__name { order: 0; }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="lang-switch" href="../index.html" lang="ar" dir="rtl">عربي</a>
+    <nav class="nav" id="site-nav" aria-label="Main navigation">
+      <a href="#about">What is this</a>
+      <a href="#download">Download</a>
+      <a href="#install">Install</a>
+      <a href="#gallery">Media</a>
+      <a href="#faq">FAQ</a>
+      <a href="#credits">Team</a>
+    </nav>
+    <a class="brand" href="#top" aria-label="OMORI AR — home">
+      <span class="brand__collab">
+        <img class="team-brand__logo" src="../assets/img/etrdream-logo.png" alt="The Eternal Dream logo" width="22" height="30">
+        <span class="brand__x" aria-hidden="true">×</span>
+        <img class="brand__title-logo" src="../assets/img/omori-title-logo.png" alt="OMORI" width="24" height="26">
+      </span>
+    </a>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+      <span class="menu-toggle__bar"></span>
+      <span class="visually-hidden">Menu</span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" id="top">
+    <div class="stars" aria-hidden="true">
+      <div class="stars__layer" data-depth="0.35"></div>
+      <div class="stars__layer" data-depth="0.65"></div>
+    </div>
+    <div class="hero__content reveal is-in">
+      <p class="hero__kicker">Black · <span class="team-brand"><img class="team-brand__logo team-brand__logo--sm" src="../assets/img/etrdream-logo.png" alt="The Eternal Dream logo" width="17" height="22" loading="lazy">The Eternal Dream</span> · <span class="team-brand"><img class="team-brand__logo team-brand__logo--sm" src="../assets/img/omori-title-logo.png" alt="Omori AR logo" width="20" height="22" loading="lazy">Omori AR</span></p>
+      <h1 class="hero__title">OMORI <span class="hero__omori" lang="ar">بالعربي</span></h1>
+      <p class="hero__sub">The complete Arabic fan localization — every line of dialogue, every menu, every battle log, the font itself. Made by the Arab OMORI community.</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#download">Get the patch</a>
+        <a class="btn btn--ghost" href="#gallery">See it in action</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title reveal">What is this?</h2>
+      <div class="about reveal">
+        <p class="about__lead">
+          A complete Arabic translation of OMORI by <strong>Black</strong> with <strong>The Eternal Dream</strong>
+          and <strong>Omori AR</strong>: all text and dialogue, every menu interface, the font itself rebuilt
+          to support Arabic, and the game's written images redrawn in Arabic.
+        </p>
+        <ul class="stats" role="list">
+          <li class="stat reveal"><span class="stat__num">18,308</span><span class="stat__label">translated lines</span></li>
+          <li class="stat reveal"><span class="stat__num">235</span><span class="stat__label">translated images</span></li>
+          <li class="stat reveal"><span class="stat__num">25</span><span class="stat__label">technical plugins</span></li>
+          <li class="stat reveal"><span class="stat__num">1.3</span><span class="stat__label">current version</span></li>
+        </ul>
+        <p class="about__note">It installs as a mod on top of your existing copy of the game. It does not modify the game's core files.</p>
+
+        <h3 class="about__sub reveal" id="translated">What's translated?</h3>
+        <div class="grid reveal">
+          <article class="card">
+            <h4 class="card__title">Text &amp; dialogue</h4>
+            <p>Every line of dialogue from White Space to Black Space: 18,308 lines compared literally against the original English — zero formatting-token errors.</p>
+          </article>
+          <article class="card">
+            <h4 class="card__title">Menus</h4>
+            <p>Title screen, options, save/load, shop, mail, quests, the encyclopedia, photo album, name entry, and the mod menu — all Arabic and mirrored right-to-left in the game's own style.</p>
+          </article>
+          <article class="card">
+            <h4 class="card__title">Battle UI</h4>
+            <p>Battle log, party commands, skill bubbles, and the heart &amp; juice bars — with a dedicated feminine form.</p>
+          </article>
+          <article class="card">
+            <h4 class="card__title">Images</h4>
+            <p>235 in-game images redrawn in Arabic: signs, the game-over screen, minigames, posters, and the title-screen buttons.</p>
+          </article>
+          <article class="card">
+            <h4 class="card__title">The font</h4>
+            <p>The <span class="latin">OMORI GAME</span> font itself was rebuilt to support Arabic letters — in-game text looks drawn by the game's own hand.</p>
+          </article>
+          <article class="card">
+            <h4 class="card__title">Correct grammar</h4>
+            <p>Punctuation sits where it belongs, and the translation is hand-crafted, excellent, and proofread — because we care about quality.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--download section--alt" id="download">
+    <div class="container">
+      <h2 class="section-title reveal">Download</h2>
+      <p class="download-note reveal">The patch is free — you need an original copy of OMORI to play it.</p>
+
+      <div class="download-grid">
+        <article class="dl reveal" id="dl-pc">
+          <h3 class="dl__title">PC</h3>
+          <ul class="dl__reqs" role="list">
+            <li>Original <a class="steam-link" href="https://store.steampowered.com/app/1150690/OMORI/" target="_blank" rel="noopener">OMORI</a> — v1.0.8 (the latest version)</li>
+            <li>The <a class="dl-link" href="https://github.com/rphsoftware/OneLoader/releases" target="_blank" rel="noopener">OneLoader</a> mod loader</li>
+            <li>Windows 10/11 — less than 1&nbsp;GB of extra space</li>
+          </ul>
+          <p class="dl__steps-hint">Install steps below ↓</p>
+          <button class="btn btn--primary dl__btn" type="button" data-download="pc">Download for PC</button>
+        </article>
+
+        <article class="dl reveal" id="dl-android">
+          <h3 class="dl__title">Android</h3>
+          <ul class="dl__reqs" role="list">
+            <li>A standalone APK — the whole game with Arabic built in</li>
+            <li>Android 9 or newer</li>
+            <li>About 2&nbsp;GB of space</li>
+          </ul>
+          <p class="dl__steps-hint">Install steps below ↓</p>
+          <button class="btn btn--primary dl__btn" type="button" data-download="android">Download for Android</button>
+        </article>
+      </div>
+
+      <p class="dl-msg reveal" id="dl-msg" role="status" aria-live="polite" hidden></p>
+
+      <p class="steam-cta reveal">
+        Don't own the game?
+        <a class="steam-cta__btn" href="https://store.steampowered.com/app/1150690/OMORI/" target="_blank" rel="noopener">
+          <img src="../assets/img/steam.svg" alt="" width="22" height="22">
+          Buy OMORI on Steam
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="install">
+    <div class="container">
+      <h2 class="section-title reveal">Install guide</h2>
+      <div class="download-grid">
+        <article class="dl reveal">
+          <h3 class="dl__title">PC</h3>
+          <ol class="dl__steps">
+            <li>Download the patch file above.</li>
+            <li>Install <a class="dl-link" href="https://github.com/rphsoftware/OneLoader/releases" target="_blank" rel="noopener">OneLoader</a>: open your OMORI folder (right-click the game in Steam → <span class="latin">Manage → Browse local files</span>), then move the <span class="latin">OneLoader</span> folder into <span class="latin">omori/www</span>.</li>
+            <li>Copy the <span class="latin">Omori AR</span> folder into <span class="latin">www/mods/</span>.</li>
+            <li>Launch the game — Arabic UI and text appear immediately.</li>
+          </ol>
+        </article>
+        <article class="dl reveal">
+          <h3 class="dl__title">Android</h3>
+          <ol class="dl__steps">
+            <li>Download the <span class="latin">APK</span> above.</li>
+            <li>Install it like any app (enable "unknown sources" if asked).</li>
+            <li>Launch the game — everything is in Arabic from first boot.</li>
+          </ol>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="gallery">
+    <div class="container">
+      <h2 class="section-title reveal">Media</h2>
+      <p class="gallery-note reveal">Real screenshots from the localization — click any image to view it large.</p>
+
+      <div class="video-frame reveal">
+        <video id="trailer" preload="metadata" playsinline>
+          <source src="../assets/video/jan-2023-trailer.mp4" type="video/mp4">
+          Your browser does not support video.
+        </video>
+        <button class="video-cover" id="video-cover" type="button" aria-label="Play video">
+          <span class="video-cover__triangle"></span>
+          <span class="video-cover__label">Play video</span>
+        </button>
+        <button class="video-ctrl" id="video-ctrl" type="button" aria-label="Pause" hidden>
+          <span class="video-ctrl__icon--pause" id="video-ctrl-icon"></span>
+        </button>
+      </div>
+
+      <div class="screens">
+        <figure class="screen reveal"><div class="screen__slot" data-screen="1"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="2"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="3"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="4"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="5"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="6"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="7"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="8"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="9"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="10"><span>coming soon</span></div></figure>
+        <figure class="screen reveal"><div class="screen__slot" data-screen="11"><span>coming soon</span></div></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container">
+      <h2 class="section-title reveal">FAQ</h2>
+      <ul class="issues reveal" role="list">
+        <li><strong>Is it free?</strong> Yes — like all fan translations. You still need an original copy of OMORI.</li>
+        <li><strong>Does it change game files?</strong> No — it installs as a side-loading mod and can be removed by deleting one folder.</li>
+        <li><strong>Are old save files compatible?</strong> Yes — but English player names saved with very old patch builds may show legacy letter shapes. Any new game is completely unaffected.</li>
+        <li><strong>Does it support the feminine form?</strong> Yes — when Aubrey leads the party, the battle log and status messages are fully in the feminine form.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--credits" id="credits">
+    <div class="container container--narrow">
+      <h2 class="section-title reveal">The team</h2>
+      <p class="cr-teams reveal">
+          Black &middot;
+          <span class="team-brand">
+            <img class="team-brand__logo" src="../assets/img/etrdream-logo.png" alt="The Eternal Dream logo" width="22" height="30" loading="lazy">
+            The Eternal Dream
+          </span> &middot;
+          <span class="team-brand">
+            <img class="team-brand__logo" src="../assets/img/omori-title-logo.png" alt="Omori AR logo" width="30" height="30" loading="lazy">
+            Omori AR
+          </span>
+        </p>
+      <ul class="credits reveal" role="list">
+        <li class="cr"><span class="cr__role">Text &amp; image translation, font edit, proofing, playtesting</span><span class="cr__name">Black (Onyx)</span></li>
+        <li class="cr"><span class="cr__role">Programming, support, translation</span><span class="cr__name">arisu</span></li>
+        <li class="cr"><span class="cr__role">Programming, art, translation</span><span class="cr__name">kitsou</span></li>
+        <li class="cr"><span class="cr__role">Translation, images, playtesting</span><span class="cr__name">MAZ</span></li>
+        <li class="cr"><span class="cr__role">Translation, proofing</span><span class="cr__name">Allen Wouka</span></li>
+        <li class="cr"><span class="cr__role">Translation, Android port</span><span class="cr__name">q3yb</span></li>
+        <li class="cr"><span class="cr__role">Translation, images</span><span class="cr__name">Dou (DOUDOUNTS1)</span></li>
+        <li class="cr"><span class="cr__role">Translation, proofing</span><span class="cr__name">Almondatchy (Datchy)</span></li>
+        <li class="cr"><span class="cr__role">Translation</span><span class="cr__name">sumairi (PEPO)</span></li>
+        <li class="cr"><span class="cr__role">Translation</span><span class="cr__name">Yahya (yahiam113)</span></li>
+        <li class="cr"><span class="cr__role">Translation, proofing, images</span><span class="cr__name">itzksa</span></li>
+        <li class="cr"><span class="cr__role">Translation</span><span class="cr__name">Qutairu</span></li>
+        <li class="cr"><span class="cr__role">Proofing</span><span class="cr__name">IBEX</span></li>
+        <li class="cr"><span class="cr__role">Translation</span><span class="cr__name">M7MD</span></li>
+        <li class="cr"><span class="cr__role">Playtesting</span><span class="cr__name">SAM</span></li>
+        <li class="cr"><span class="cr__role">Playtesting</span><span class="cr__name">swe</span></li>
+      </ul>
+      <p class="cr-special reveal">Special thanks: <span class="cr-you">you</span>.</p>
+
+      <div class="community reveal">
+        <a class="community__link" href="https://etrdream.com/" target="_blank" rel="noopener">
+          <img src="../assets/img/etrdream-logo.png" alt="" width="22" height="30" loading="lazy">
+          <span>The Eternal Dream website</span>
+        </a>
+        <a class="community__link" href="https://discord.gg/EsHku5wJed" target="_blank" rel="noopener">
+          <img src="../assets/img/discord.svg" alt="" width="26" height="26" loading="lazy">
+          <span>Eternal Dream Discord</span>
+        </a>
+        <a class="community__link" href="https://discord.gg/Z29SEsXAfU" target="_blank" rel="noopener">
+          <img src="../assets/img/discord-purple.svg" alt="" width="26" height="26" loading="lazy">
+          <span>Omori AR Discord</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>
+    OMORI is a game by <span class="latin">OMOCAT</span> — this is an unofficial fan translation site, not affiliated with the developer or publisher.
+    All game assets belong to their respective owners.
+  </p>
+  <p class="site-footer__small">OMORI Arabic Translation — 2026</p>
+</footer>
+
+<script src="../js/main.js" defer></script>
+</body>
+</html>
