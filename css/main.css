@@ -1,934 +1,278 @@
 /* =========================================================
-   تعريب OMORI — main.css
-   Design tokens derived from the game's actual UI:
-   - pure black #000 canvas (in-game window background)
-   - white rounded-outline boxes (dialog/menus, 3px border)
-   - emotion colors: ANGRY #ff003c, SAD #1f6dff, HAPPY #ffd11f
-   - OMORI_GAME2.ttf — the localization's real Arabic font
-   - the mod's real RTL hand cursor (cursor_menu.png)
+   تعريب OMORI — main.js
    ========================================================= */
 
-:root {
-  --black: #000;
-  --white: #fff;
-  --dim: rgba(255, 255, 255, .55);
-  --faint: rgba(255, 255, 255, .25);
-  --line: rgba(255, 255, 255, .8);
-
-  --angry: #ff003c;
-  --sad: #1f6dff;
-  --happy: #ffd11f;
-  --omori: #a020f0; /* the 100% purple from the game's completion screen */
-
-  --border: 3px;
-  --radius: 12px;
-  --radius-lg: 20px;
-
-  --font: "OMORI GAME", "OMORI_GAME2", "Segoe UI", Tahoma, sans-serif;
-
-  --max-w: 1080px;
-  --gutter: clamp(18px, 4vw, 40px);
-}
-
-/* ---------- base ---------- */
-
-* { box-sizing: border-box; }
-
-@font-face {
-  font-family: "OMORI GAME";
-  src: url("../assets/fonts/OMORI_GAME2.ttf") format("truetype");
-  font-display: swap;
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  margin: 0;
-  background: var(--black);
-  color: var(--white);
-  font-family: var(--font);
-  font-size: 20px;
-  line-height: 1.9;
-  letter-spacing: .3px;
-  overflow-x: hidden;
-}
-
-.latin {
-  direction: ltr;
-  unicode-bidi: embed;
-  font-family: var(--font);
-}
-
-::selection { background: var(--happy); color: var(--black); }
-
-.visually-hidden {
-  position: absolute;
-  width: 1px; height: 1px;
-  margin: -1px; padding: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.skip-link {
-  position: absolute;
-  right: -9999px;
-  top: 8px;
-  background: var(--white);
-  color: var(--black);
-  padding: 8px 18px;
-  border-radius: var(--radius);
-  z-index: 100;
-}
-.skip-link:focus { right: 8px; }
-
-/* the game's real hand cursor on anything clickable */
-a, button,
-.btn, .video-cover {
-  cursor: url("../assets/img/cursor_menu.png") 6 7, pointer;
-}
-
-/* ---------- star layers (title-screen night sky) ---------- */
-
-/* stars live inside the hero only — the title-screen moment */
-.stars {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-  border-radius: inherit;
-}
-.stars__layer {
-  position: absolute;
-  inset: -80px;
-  background-image:
-    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,.9) 50%, transparent 51%),
-    radial-gradient(1px 1px at 34% 68%, rgba(255,255,255,.7) 50%, transparent 51%),
-    radial-gradient(2px 2px at 58% 14%, rgba(255,255,255,.8) 50%, transparent 51%),
-    radial-gradient(1px 1px at 71% 47%, rgba(255,255,255,.6) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 86% 74%, rgba(255,255,255,.85) 50%, transparent 51%),
-    radial-gradient(1px 1px at 24% 88%, rgba(255,255,255,.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 47% 37%, rgba(255,255,255,.55) 50%, transparent 51%),
-    radial-gradient(2px 2px at 92% 29%, rgba(255,255,255,.75) 50%, transparent 51%),
-    radial-gradient(1px 1px at 8% 57%, rgba(255,255,255,.5) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 65% 90%, rgba(255,255,255,.8) 50%, transparent 51%);
-  background-size: 640px 640px;
-  animation: twinkle 4.2s ease-in-out infinite alternate;
-}
-.stars__layer[data-depth="0.65"] {
-  background-size: 440px 440px;
-  animation-delay: -2.1s;
-  opacity: .7;
-}
-@keyframes twinkle {
-  from { opacity: .45; }
-  to   { opacity: 1; }
-}
-
-/* ---------- header ---------- */
-
-.site-header {
-  position: fixed;
-  top: 0; right: 0; left: 0;
-  z-index: 50;
-  background: rgba(0, 0, 0, .82);
-  backdrop-filter: blur(4px);
-  border-bottom: 1px solid var(--faint);
-}
-.site-header__inner {
-  max-width: var(--max-w);
-  margin-inline: auto;
-  padding: 12px var(--gutter);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--white);
-}
-.brand__ar { font-size: 24px; }
-.brand__en {
-  font-size: 24px;
-  letter-spacing: 4px;
-  color: var(--omori);
-}
-.brand__accent {
-  font-size: 24px;
-  color: var(--omori);
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.lang-switch {
-  border: 2px solid var(--faint);
-  border-radius: 10px;
-  padding: 3px 12px;
-  font-size: 15px;
-  color: var(--dim);
-  text-decoration: none;
-  transition: border-color .15s, color .15s;
-}
-.lang-switch:hover { border-color: var(--white); color: var(--white); }
-
-.nav {
-  display: flex;
-  gap: clamp(12px, 2.4vw, 30px);
-  /* centered between the brand and the language switch */
-  margin-inline: auto;
-}
-.nav a {
-  color: var(--dim);
-  text-decoration: none;
-  font-size: 17px;
-  padding: 4px 2px;
-  border-bottom: var(--border) solid transparent;
-  transition: color .15s, border-color .15s;
-}
-.nav a:hover { color: var(--white); }
-.nav a.is-active {
-  color: var(--white);
-  border-bottom-color: var(--happy);
-}
-
-.menu-toggle {
-  display: none;
-  background: none;
-  border: var(--border) solid var(--line);
-  border-radius: var(--radius);
-  padding: 8px 10px;
-  flex-direction: column;
-  gap: 5px;
-}
-.menu-toggle__bar {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: var(--white);
-}
-
-/* ---------- layout ---------- */
-
-main { position: relative; z-index: 1; }
-
-.section {
-  padding: clamp(56px, 9vw, 110px) 0;
-  position: relative;
-  scroll-margin-top: 64px;
-}
-.section--alt {
-  background: rgba(255, 255, 255, .03);
-  border-block: 1px solid var(--faint);
-}
-
-.container {
-  max-width: var(--max-w);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-.container--narrow { max-width: 780px; }
-
-.section-title {
-  font-size: clamp(28px, 4.6vw, 44px);
-  font-weight: normal;
-  margin: 0 0 34px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-/* the game underlines key words with a hand-drawn white stroke */
-.section-title::after {
-  content: "";
-  flex: 0 0 64px;
-  height: var(--border);
-  background: var(--white);
-  border-radius: 2px;
-}
-
-/* ---------- buttons — the game's white rounded outline box ---------- */
-
-.btn {
-  display: inline-block;
-  padding: 14px 38px;
-  border: var(--border) solid var(--white);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--white);
-  font-family: var(--font);
-  font-size: 20px;
-  text-decoration: none;
-  text-align: center;
-  transition: background .15s, color .15s, transform .15s;
-}
-.btn:hover {
-  background: var(--white);
-  color: var(--black);
-  transform: translateY(-2px);
-}
-.btn:active { transform: translateY(0); }
-.btn--ghost { border-color: var(--faint); color: var(--dim); }
-.btn--ghost:hover {
-  background: transparent;
-  border-color: var(--white);
-  color: var(--white);
-}
-.btn:focus-visible,
-a:focus-visible,
-button:focus-visible {
-  outline: 3px solid var(--happy);
-  outline-offset: 3px;
-}
-
-/* ---------- hero ---------- */
-
-.hero {
-  position: relative;
-  min-height: 100svh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 120px var(--gutter) 60px;
-}
-.hero__content { position: relative; z-index: 1; max-width: 820px; }
-
-.hero__kicker {
-  color: var(--dim);
-  font-size: clamp(15px, 2vw, 19px);
-  margin: 0 0 10px;
-  letter-spacing: 1px;
-}
-
-.hero__title {
-  font-size: clamp(44px, 9vw, 96px);
-  font-weight: normal;
-  margin: 0;
-  line-height: 1.25;
-  animation: hero-in 1s ease-out both;
-}
-.hero__omori {
-  direction: ltr;
-  unicode-bidi: embed;
-  color: var(--omori);
-  letter-spacing: 8px;
-}
-
-.hero__sub {
-  color: var(--dim);
-  font-size: clamp(18px, 2.6vw, 24px);
-  margin: 14px 0 40px;
-}
-
-.hero__actions {
-  display: flex;
-  gap: 18px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-@keyframes hero-in {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* ---------- about / stats ---------- */
-
-.about__lead {
-  font-size: clamp(20px, 2.6vw, 25px);
-  max-width: 70ch;
-  margin: 0 0 44px;
-}
-.about__lead strong { color: var(--omori); font-weight: normal; }
-
-.stats {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  padding: 0;
-  margin: 0 0 34px;
-}
-.stat {
-  border: var(--border) solid var(--faint);
-  border-radius: var(--radius-lg);
-  padding: 20px 12px;
-  text-align: center;
-  transition: border-color .2s;
-}
-.stat:hover { border-color: var(--white); }
-.stat__num {
-  display: block;
-  font-size: clamp(30px, 4.4vw, 46px);
-  color: var(--white);
-}
-.stat__label { color: var(--dim); font-size: 16.5px; }
-
-.about__note { color: var(--dim); max-width: 62ch; }
-
-.about__sub {
-  font-weight: normal;
-  font-size: clamp(22px, 3.4vw, 30px);
-  margin: 54px 0 24px;
-  color: var(--white);
-}
-
-.dl__standalone {
-  color: var(--dim);
-  font-size: 17px;
-  line-height: 1.9;
-  margin: 0 0 22px;
-}
-
-/* screenshot grid without captions */
-.screen__slot { aspect-ratio: 4 / 3; }
-
-/* ---------- cards ---------- */
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-}
-
-.card {
-  border: var(--border) solid var(--faint);
-  border-radius: var(--radius-lg);
-  padding: 26px 24px;
-  background: rgba(0, 0, 0, .35);
-  transition: border-color .2s, transform .2s;
-}
-.card:hover { border-color: var(--white); transform: translateY(-3px); }
-
-.card__title {
-  margin: 0 0 12px;
-  font-weight: normal;
-  font-size: 23px;
-  color: var(--omori);
-}
-.card p {
-  margin: 0;
-  color: var(--dim);
-  font-size: 18px;
-  line-height: 1.95;
-}
-
-/* ---------- download ---------- */
-
-.section--download .download-note {
-  color: var(--dim);
-  margin: -18px 0 38px;
-}
-
-.download-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 26px;
-}
-
-.dl {
-  border: var(--border) solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 30px 28px;
-  background: rgba(0, 0, 0, .5);
-  display: flex;
-  flex-direction: column;
-}
-.dl__title {
-  margin: 0 0 16px;
-  font-weight: normal;
-  font-size: 28px;
-}
-.dl__reqs {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 18px;
-  color: var(--dim);
-  font-size: 17px;
-}
-.dl__reqs li::before {
-  content: "•";
-  color: var(--happy);
-  margin-inline-end: 8px;
-}
-.dl__steps {
-  margin: 0 0 26px;
-  padding-inline-start: 22px;
-  color: var(--dim);
-  font-size: 17px;
-}
-.dl__steps li { margin-bottom: 6px; }
-.dl__steps li::marker { color: var(--happy); }
-.dl__btn { margin-top: auto; }
-.dl__steps-hint { color: var(--dim); font-size: 16px; margin: 0 0 18px; }
-
-.dl-msg {
-  margin: 26px 0 0;
-  padding: 14px 20px;
-  border: var(--border) dashed var(--happy);
-  border-radius: var(--radius);
-  color: var(--happy);
-}
-
-/* ---------- gallery / video ---------- */
-
-.gallery-note { color: var(--dim); margin: -18px 0 30px; }
-
-.video-frame {
-  position: relative;
-  max-width: 880px;
-  margin: 0 auto 40px;
-  border: var(--border) solid var(--line);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--black);
-  aspect-ratio: 16 / 9;
-}
-.video-frame video {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.video-cover {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  border: 0;
-  background: rgba(0, 0, 0, .55);
-  color: var(--white);
-  font-family: var(--font);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  transition: background .2s;
-}
-.video-cover:hover { background: rgba(0, 0, 0, .35); }
-.video-cover[hidden] { display: none; }
-
-.video-cover__triangle {
-  width: 0; height: 0;
-  border-block: 22px solid transparent;
-  border-inline-start: 36px solid var(--white);
-  margin-inline-start: 8px; /* optical centering of a right-pointing triangle */
-}
-.video-cover__label { font-size: 19px; }
-
-/* pause/play control shown while the video runs */
-.video-ctrl {
-  position: absolute;
-  bottom: 14px;
-  inset-inline-start: 14px;
-  width: 46px;
-  height: 46px;
-  border: 2px solid var(--white);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, .6);
-  display: grid;
-  place-items: center;
-  transition: background .15s;
-}
-.video-ctrl:hover { background: rgba(0, 0, 0, .85); }
-.video-ctrl[hidden] { display: none; }
-.video-ctrl__icon--pause {
-  width: 14px;
-  height: 16px;
-  border-inline-start: 5px solid var(--white);
-  border-inline-end: 5px solid var(--white);
-}
-.video-ctrl__icon--play {
-  width: 0;
-  height: 0;
-  border-block: 9px solid transparent;
-  border-inline-start: 15px solid var(--white);
-  margin-inline-start: 3px;
-}
-
-.screens {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-}
-.screen { margin: 0; }
-.screen__slot {
-  aspect-ratio: 4 / 3;
-  border: var(--border) dashed var(--faint);
-  border-radius: var(--radius);
-  display: grid;
-  place-items: center;
-  color: var(--faint);
-  font-size: 15px;
-  background:
-    repeating-linear-gradient(45deg, transparent 0 12px, rgba(255,255,255,.02) 12px 24px);
-}
-.screen--extra { display: none; }
-.screen--extra.has-img { display: block; }
-.screen__slot.has-img {
-  border-style: solid;
-  border-color: var(--line);
-}
-.screen__slot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  border-radius: calc(var(--radius) - 3px);
-}
-.screen figcaption {
-  text-align: center;
-  color: var(--dim);
-  font-size: 16px;
-  margin-top: 10px;
-}
-
-/* ---------- issues ---------- */
-
-.issues-note { color: var(--dim); margin: -18px 0 30px; }
-.issues {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-width: 760px;
-}
-.issues li {
-  padding: 14px 18px;
-  border-inline-start: var(--border) solid var(--angry);
-  background: rgba(255, 0, 60, .05);
-  /* sharp corners on the bar side, rounded on the far side — flips with dir */
-  border-start-start-radius: 0;
-  border-start-end-radius: var(--radius);
-  border-end-end-radius: var(--radius);
-  border-end-start-radius: 0;
-  margin-bottom: 12px;
-  color: var(--dim);
-  font-size: 18px;
-}
-.issues li strong { color: var(--white); font-weight: normal; }
-
-/* ---------- credits — mirrors the game's own credits screen ---------- */
-
-.cr-teams {
-  text-align: center;
-  font-size: clamp(19px, 3vw, 25px);
-  color: var(--omori);
-  margin: 0 0 40px;
-}
-
-/* a team name with its logo inline */
-.team-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  vertical-align: middle;
-}
-.team-brand__logo {
-  height: 30px;
-  width: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, .25));
-}
-/* smaller variant for the hero kicker line */
-.team-brand__logo--sm {
-  height: 22px;
-  vertical-align: -6px;
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, .2));
-}
-/* header brand lockup: [eternal-dream logo] × [OMORI logo] فريق أوموري بالعربي */
-.brand__collab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.brand__title-logo {
-  height: 26px;
-  width: auto;
-  opacity: .95;
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, .25));
-}
-.brand .team-brand__logo { height: 24px; }
-.brand__x {
-  color: var(--purple, #b14aed);
-  margin: 0 6px;
-  font-size: .8em;
-}
-/* OneLoader download links inside requirement/step lists */
-.dl-link {
-  color: var(--yellow, #ffd11f);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.dl-link:hover { color: #fff; }
-@media (max-width: 620px) {
-  .brand__x { display: none; }
-}
-
-.credits {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.cr {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-  padding: 13px 6px;
-  border-bottom: 1px solid var(--faint);
-}
-.cr:last-child { border-bottom: 0; }
-.cr__role { color: var(--dim); font-size: 17px; text-align: start; }
-.cr__name {
-  order: -1;               /* name on the right, like the game's RTL credits */
-  font-size: 21px;
-  white-space: nowrap;
-}
-.cr__name--lead { color: var(--omori); }
-
-.cr-special {
-  text-align: center;
-  margin: 44px 0 0;
-  font-size: 20px;
-  color: var(--dim);
-}
-.cr-you { color: var(--white); }
-
-/* ---------- community links (under "special thanks") ---------- */
-
-.community {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 36px;
-}
-.community__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  border: 2px solid var(--faint);
-  border-radius: var(--radius);
-  color: var(--dim);
-  text-decoration: none;
-  font-size: 15px;
-  transition: border-color .2s, color .2s, transform .2s;
-}
-.community__link:hover {
-  border-color: var(--omori);
-  color: var(--white);
-  transform: translateY(-2px);
-}
-.community__link img {
-  height: 24px;
-  width: auto;
-  display: block;
-}
-.community__link img[src*="etrdream"] { height: 26px; }
-
-/* ---------- Steam CTA (under the download cards) ---------- */
-
-.steam-cta {
-  text-align: center;
-  margin: 36px 0 0;
-  color: var(--dim);
-  font-size: 17px;
-}
-.steam-cta__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-inline-start: 12px;
-  padding: 10px 22px;
-  border: 2px solid var(--faint);
-  border-radius: var(--radius);
-  color: var(--white);
-  text-decoration: none;
-  font-size: 16px;
-  transition: border-color .2s, transform .2s, box-shadow .2s;
-}
-.steam-cta__btn:hover {
-  border-color: var(--white);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(255, 255, 255, .08);
-}
-.steam-cta__btn img { display: block; }
-
-/* inline steam link on the OMORI word in requirements */
-.steam-link {
-  color: var(--happy, #ffd11f);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: rgba(255, 209, 31, .4);
-}
-.steam-link:hover { color: var(--white); text-decoration-color: currentColor; }
-
-/* ---------- footer ---------- */
-
-.site-footer {
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid var(--faint);
-  padding: 34px var(--gutter) 44px;
-  text-align: center;
-  color: var(--faint);
-  font-size: 16px;
-}
-.site-footer p { margin: 6px 0; }
-.site-footer__small { opacity: .7; }
-
-/* ---------- game-feel animations (all subtle, all optional) ---------- */
-
-/* hero title: a slow blink like the title screen's OMORI */
-@keyframes omori-blink {
-  0%, 88%, 100% { opacity: 1; }
-  90%, 94% { opacity: .35; }
-}
-.hero__title { animation: hero-in 1s ease-out both, omori-blink 7s ease-in-out 2.5s infinite; }
-
-/* download buttons breathe very slightly — the only pulsing element on the page */
-@keyframes btn-breathe {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-  50% { box-shadow: 0 0 18px 2px rgba(255, 255, 255, .18); }
-}
-.btn--primary { animation: btn-breathe 3.2s ease-in-out infinite; }
-.btn--primary:hover { animation: none; }
-
-/* cards: the emotion-shift on hover — tilt + colored edge light */
-.card, .dl, .stat { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
-.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, .6); }
-.dl:hover { border-color: var(--white); }
-.stat:hover { transform: translateY(-2px); }
-
-/* screenshots: gentle zoom on hover */
-.screen__slot { overflow: hidden; transition: border-color .2s; }
-.screen__slot:hover { border-color: var(--white); }
-.screen__slot img { transition: transform .35s ease; }
-.screen__slot:hover img { transform: scale(1.04); }
-
-/* section titles: white stroke slides in */
-.section-title::after { transform-origin: right; }
-.reveal.is-in .section-title::after,
-section .section-title::after { animation: stroke-in .8s ease both; }
-@keyframes stroke-in {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-/* credits rows: hover highlight like the game's selection hand */
-.cr { transition: background .15s, padding .15s; border-radius: 8px; }
-.cr:hover { background: rgba(255, 255, 255, .04); }
-
-/* lightbox */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  background: rgba(0, 0, 0, .92);
-  display: none;
-  place-items: center;
-  padding: 24px;
-  overflow: hidden;
-}
-.lightbox.is-open { display: grid; }
-.lightbox img {
-  max-width: min(1200px, 94vw);
-  max-height: 88vh;
-  border: var(--border) solid var(--line);
-  border-radius: var(--radius-lg);
-}
-.lightbox__close {
-  position: absolute;
-  top: 18px;
-  inset-inline-start: 18px;
-  width: 46px;
-  height: 46px;
-  border: 2px solid var(--white);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, .6);
-  color: var(--white);
-  font-size: 26px;
-  line-height: 1;
-}
-
-/* ---------- reveal on scroll ---------- */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity .6s ease, transform .6s ease;
-}
-.reveal.is-in {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---------- responsive ---------- */
-
-@media (max-width: 960px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-  .stats { grid-template-columns: repeat(2, 1fr); }
-  .screens { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 760px) {
-  .nav {
-    position: fixed;
-    top: 57px;
-    right: 0; left: 0;
-    flex-direction: column;
-    gap: 0;
-    background: #000;
-    border-bottom: 1px solid var(--faint);
-    padding: 8px var(--gutter) 16px;
-    display: none;
-    margin-inline: 0;
+/* ---------------------------------------------------------
+   DOWNLOAD LINKS — the single place to edit later.
+   Put the real patch URLs here; empty string = not ready yet
+   and the button shows a friendly message instead of a dead link.
+   --------------------------------------------------------- */
+const DOWNLOAD_LINKS = {
+  pc: '',      // e.g. 'https://.../Omori-AR-1.3-pc.zip'
+  android: '', // e.g. 'https://.../Omori-AR-1.3-android.zip'
+};
+
+const MESSAGES = {
+  pc: 'رابط تحميل نسخة الحاسوب قيد الإعداد — تابع قنوات الفريق ليصلك الإعلان.',
+  android: 'رابط تحميل نسخة الجوال قيد الإعداد — تابع قنوات الفريق ليصلك الإعلان.',
+  // English mini-page (en/index.html) uses the same DOWNLOAD_LINKS above.
+  en_pc: 'The PC download link is being set up — follow the team channels for the release announcement.',
+  en_android: 'The Android download link is being set up — follow the team channels for the release announcement.',
+};
+
+const LANG = document.documentElement.lang === 'en' ? 'en' : 'ar';
+
+(function () {
+  'use strict';
+
+  /* ---------- download buttons ---------- */
+
+  const dlMsg = document.getElementById('dl-msg');
+
+  function showDlMsg(text) {
+    if (!dlMsg) return;
+    dlMsg.textContent = text;
+    dlMsg.hidden = false;
   }
-  .nav.is-open { display: flex; }
-  .nav a {
-    padding: 12px 4px;
-    border-bottom: none;
-    font-size: 19px;
+
+  document.querySelectorAll('[data-download]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const key = btn.getAttribute('data-download');
+      const url = DOWNLOAD_LINKS[key];
+
+      if (url) {
+        window.open(url, '_blank', 'noopener');
+      } else {
+        const msgKey = LANG === 'en' ? 'en_' + key : key;
+        showDlMsg(MESSAGES[msgKey] || MESSAGES[key] || 'قريباً.');
+      }
+    });
+  });
+
+  /* ---------- screenshot slots: drop files in assets/img/screens/ and they appear ---------- */
+
+  const SCREEN_EXT = ['jpg', 'png', 'webp'];
+  // works from both /index.html and /en/index.html
+  const SCREEN_BASE = (function () {
+    const probe = document.querySelector('link[rel="stylesheet"]');
+    if (probe && probe.getAttribute('href').includes('../')) return '../assets/img/screens/';
+    return 'assets/img/screens/';
+  })();
+
+  function probeImage(url) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
   }
-  .menu-toggle { display: flex; }
-  .lang-switch { position: relative; z-index: 60; }
 
-  .download-grid { grid-template-columns: 1fr; }
+  async function autoFillScreens() {
+    const slots = Array.from(document.querySelectorAll('.screen__slot[data-screen]'));
+    if (!slots.length) return;
 
-  .cr { flex-direction: column-reverse; align-items: flex-start; gap: 2px; }
-  .cr__name { white-space: normal; }
-}
+    // Probe numbered names: screen1.jpg, screen2.jpg, ... (.png/.webp also work)
+    const candidates = [];
+    slots.forEach((slot, i) => {
+      candidates.push(SCREEN_EXT.map((ext) => ({ slot, url: SCREEN_BASE + 'screen' + (i + 1) + '.' + ext })));
+    });
 
-@media (max-width: 520px) {
-  .grid { grid-template-columns: 1fr; }
-  .stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .hero__actions .btn { width: 100%; }
-  .screens { grid-template-columns: 1fr; }
-  .video-cover__triangle {
-    border-block-width: 16px;
-    border-inline-start-width: 26px;
+    for (const group of candidates) {
+      for (const { slot, url } of group) {
+        if (slot.dataset.filled) break;
+        const found = await probeImage(url);
+        if (found) {
+          slot.classList.add('has-img');
+          slot.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = found;
+          const isEn = document.documentElement.lang === 'en';
+          img.alt = isEn ? 'Localization screenshot' : 'لقطة من التعريب';
+          img.loading = 'lazy';
+          slot.appendChild(img);
+          slot.dataset.filled = '1';
+          break;
+        }
+      }
+    }
+
+    // A lightbox for the filled slots — click a screenshot to view it large.
+    document.querySelectorAll('.screen__slot.has-img').forEach((slot) => {
+      slot.setAttribute('tabindex', '0');
+      slot.setAttribute('role', 'button');
+      slot.setAttribute('aria-label', isEn() ? 'عرض الصورة بحجم أكبر' : 'عرض الصورة بحجم أكبر');
+      slot.addEventListener('click', () => openLightbox(slot.querySelector('img').src, slot.querySelector('img').alt));
+      slot.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(slot.querySelector('img').src, slot.querySelector('img').alt);
+        }
+      });
+    });
   }
-}
 
-/* ---------- reduced motion ---------- */
+  function isEn() { return document.documentElement.lang === 'en'; }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .stars__layer { animation: none; opacity: .6; }
-  .hero__title, .btn--primary { animation: none; }
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .btn:hover, .card:hover, .stat:hover { transform: none; }
-  .screen__slot:hover img { transform: none; }
-  * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
-}
+  function openLightbox(src, alt) {
+    let lb = document.getElementById('lightbox');
+    if (!lb) {
+      lb = document.createElement('div');
+      lb.id = 'lightbox';
+      lb.className = 'lightbox';
+      lb.innerHTML = '<button class="lightbox__close" aria-label="' + (isEn() ? 'Close' : 'إغلاق') + '\">×</button><img alt="">';
+      document.body.appendChild(lb);
+      lb.addEventListener('click', (e) => {
+        if (e.target === lb || e.target.classList.contains('lightbox__close')) closeLightbox();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lb.classList.contains('is-open')) closeLightbox();
+      });
+    }
+    lb.querySelector('img').src = src;
+    lb.querySelector('img').alt = alt;
+    lb.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    if (lb) lb.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  autoFillScreens();
+
+  /* ---------- video cover ---------- */
+
+  const video = document.getElementById('trailer');
+  const cover = document.getElementById('video-cover');
+
+  if (video && cover) {
+    const ctrl = document.getElementById('video-ctrl');
+    const ctrlIcon = document.getElementById('video-ctrl-icon');
+    const isEnPage = document.documentElement.lang === 'en';
+    const LBL = {
+      play: isEnPage ? 'Play' : 'تشغيل',
+      pause: isEnPage ? 'Pause' : 'إيقاف مؤقت',
+      replay: isEnPage ? 'Play again' : 'شغّل المقطع',
+      fail: isEnPage ? "Couldn't play — try again" : 'تعذّر التشغيل — جرّب مجدداً',
+    };
+
+    function setCtrl(paused) {
+      if (!ctrl || !ctrlIcon) return;
+      ctrl.hidden = false;
+      ctrl.setAttribute('aria-label', paused ? LBL.play : LBL.pause);
+      ctrlIcon.className = paused ? 'video-ctrl__icon--play' : 'video-ctrl__icon--pause';
+    }
+
+    cover.addEventListener('click', () => {
+      cover.hidden = true;
+      const p = video.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          cover.hidden = false;
+          cover.querySelector('.video-cover__label').textContent = LBL.fail;
+        });
+      }
+      setCtrl(false);
+    });
+
+    if (ctrl) {
+      ctrl.addEventListener('click', () => {
+        if (video.paused) {
+          video.play();
+          setCtrl(false);
+        } else {
+          video.pause();
+          setCtrl(true);
+        }
+      });
+    }
+
+    video.addEventListener('ended', () => {
+      cover.hidden = false;
+      if (ctrl) ctrl.hidden = true;
+      if (cover.querySelector('.video-cover__label')) {
+        cover.querySelector('.video-cover__label').textContent = LBL.replay;
+      }
+    });
+  }
+
+  /* ---------- star parallax (title-screen drift) ---------- */
+
+  const layers = document.querySelectorAll('.stars__layer');
+  let starRaf = 0;
+
+  function starDrift(e) {
+    cancelAnimationFrame(starRaf);
+    starRaf = requestAnimationFrame(() => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 18;
+      const y = (e.clientY / window.innerHeight - 0.5) * 12;
+      layers.forEach((layer) => {
+        const depth = parseFloat(layer.dataset.depth) || 0.5;
+        layer.style.transform = 'translate(' + (-x * depth).toFixed(1) + 'px,' + (-y * depth).toFixed(1) + 'px)';
+      });
+    });
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduceMotion && layers.length) {
+    window.addEventListener('pointermove', starDrift, { passive: true });
+  }
+
+  /* ---------- reveal on scroll ---------- */
+
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach((el) => io.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add('is-in'));
+  }
+
+  /* ---------- active nav highlight ---------- */
+
+  const navLinks = Array.from(document.querySelectorAll('.nav a'));
+  const sections = navLinks
+    .map((link) => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+
+  function setActiveNav() {
+    const y = window.scrollY + 140;
+    let current = null;
+    sections.forEach((sec) => {
+      if (sec.offsetTop <= y) current = sec.id;
+    });
+    navLinks.forEach((link) => {
+      link.classList.toggle('is-active', current !== null && link.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', setActiveNav, { passive: true });
+  setActiveNav();
+
+  /* ---------- mobile menu ---------- */
+
+  const toggle = document.getElementById('menu-toggle');
+  const nav = document.getElementById('site-nav');
+
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    nav.addEventListener('click', (e) => {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+})();
