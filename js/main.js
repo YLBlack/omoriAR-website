@@ -8,7 +8,7 @@
    and the button shows a friendly message instead of a dead link.
    --------------------------------------------------------- */
 const DOWNLOAD_LINKS = {
-  pc: 'https://github.com/YLBlack/omori-ar-website/releases/download/v1.0.8.1/Omori.AR.release.zip',      // e.g. 'https://.../Omori-AR-1.3-pc.zip'
+  pc: 'https://github.com/YLBlack/omoriAR-website/releases/download/v1.0.8.1/Omori.AR.release.zip',      // e.g. 'https://.../Omori-AR-1.3-pc.zip'
   android: 'https://github.com/YLBlack/omori-ar-website/releases/download/v1.0.8.1/OMORI-ar-1.0.8.1.apk', // e.g. 'https://.../Omori-AR-1.3-android.zip'
 };
 
