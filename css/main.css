@@ -1,18 +1,22 @@
 /* =========================================================
-   تعريب OMORI — main.css
+   تعريب أوموري — main.css
    Design tokens derived from the game's actual UI:
    - pure black #000 canvas (in-game window background)
    - white rounded-outline boxes (dialog/menus, 3px border)
    - emotion colors: ANGRY #ff003c, SAD #1f6dff, HAPPY #ffd11f
    - OMORI_GAME2.ttf — the localization's real Arabic font
    - the mod's real RTL hand cursor (cursor_menu.png)
+
+   Typography rule: OMORI GAME carries the whole site — headings,
+   buttons, credits and long-form reading text alike.
+   Never letter-space Arabic: it breaks cursive joining.
    ========================================================= */
 
 :root {
   --black: #000;
   --white: #fff;
-  --dim: rgba(255, 255, 255, .55);
-  --faint: rgba(255, 255, 255, .25);
+  --dim: rgba(255, 255, 255, .55);      /* body-dim text — 6.2:1 on black */
+  --faint: rgba(255, 255, 255, .3);     /* hairlines and decorative edges only */
   --line: rgba(255, 255, 255, .8);
 
   --angry: #ff003c;
@@ -25,9 +29,11 @@
   --radius-lg: 20px;
 
   --font: "OMORI GAME", "OMORI_GAME2", "Segoe UI", Tahoma, sans-serif;
+  --font-body: "OMORI GAME", "OMORI_GAME2", "Segoe UI", Tahoma, sans-serif;
 
   --max-w: 1080px;
   --gutter: clamp(18px, 4vw, 40px);
+  --header-h: 64px;
 }
 
 /* ---------- base ---------- */
@@ -46,20 +52,38 @@ body {
   margin: 0;
   background: var(--black);
   color: var(--white);
-  font-family: var(--font);
-  font-size: 20px;
-  line-height: 1.9;
-  letter-spacing: .3px;
+  font-family: var(--font-body);
+  font-size: 19px;
+  line-height: 1.95;
   overflow-x: hidden;
 }
 
-.latin {
-  direction: ltr;
-  unicode-bidi: embed;
+/* one typeface everywhere: the game's own font carries the whole site,
+   Arabic and Latin alike */
+:is(body, h1, h2, h3, h4, .hero__kicker, .btn, .nav a, .stat__num, .about__lead, .cr-teams,
+    .creds__names, .thanks__title, .thanks__you, .dl__title, .dl__badge,
+    .faq__item summary, .lang-switch, .lightbox__cap, .video-cover__label,
+    .community__link, .steam-cta__btn, .brand__name, .lightbox__counter) {
   font-family: var(--font);
 }
 
+.faq__item p, .about__note, .thanks__note, .cred-alias, .dl__reqs li, .dl__steps li,
+.dl__meta, .dl__note, .dl__verify p, .download-note,
+.site-footer p, .section--download .download-note, .feat__note {
+  font-family: var(--font);
+}
+
+/* LTR runs inside Arabic text: isolated, never letter-spaced in Arabic contexts */
+.latin {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: var(--font);
+  letter-spacing: .2px;
+}
+
 ::selection { background: var(--happy); color: var(--black); }
+
+body.is-locked { overflow: hidden; }
 
 .visually-hidden {
   position: absolute;
@@ -72,8 +96,10 @@ body {
 }
 
 .skip-link {
-  position: absolute;
-  right: -9999px;
+  /* fixed + logical offset: hidden off the inline-start edge without ever
+     widening the document (a physical right:-9999px leaks scroll in LTR) */
+  position: fixed;
+  inset-inline-start: -9999px;
   top: 8px;
   background: var(--white);
   color: var(--black);
@@ -81,11 +107,11 @@ body {
   border-radius: var(--radius);
   z-index: 100;
 }
-.skip-link:focus { right: 8px; }
+.skip-link:focus { inset-inline-start: 8px; }
 
 /* the game's real hand cursor on anything clickable */
-a, button,
-.btn, .video-cover {
+a, button, summary,
+.btn, .video-cover, .shot__open {
   cursor: url("../assets/img/cursor_menu.png") 6 7, pointer;
 }
 /* the header strip keeps the normal mouse arrow */
@@ -158,25 +184,33 @@ a, button,
   gap: 10px;
   text-decoration: none;
   color: var(--white);
+  white-space: nowrap;
 }
-.brand__ar { font-size: 24px; }
-.brand__en {
-  font-size: 24px;
-  letter-spacing: 4px;
-  color: var(--omori);
-}
-.brand__accent {
-  font-size: 24px;
-  color: var(--omori);
-}
+.brand__name { font-size: 21px; }
 
-.header-right {
-  display: flex;
+/* header brand lockup: [OMORI logo] × [eternal-dream logo] */
+.brand__collab {
+  display: inline-flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
+}
+.brand__title-logo {
+  height: 26px;
+  width: auto;
+  opacity: .95;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, .25));
+}
+.brand .team-brand__logo { height: 24px; }
+.brand__x {
+  color: var(--omori);
+  margin: 0 6px;
+  font-size: .8em;
 }
 
 .lang-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 2px solid var(--faint);
   border-radius: 10px;
   padding: 3px 12px;
@@ -202,7 +236,8 @@ a, button,
   transition: color .15s, border-color .15s;
 }
 .nav a:hover { color: var(--white); }
-.nav a.is-active {
+.nav a.is-active,
+.nav a[aria-current="true"] {
   color: var(--white);
   border-bottom-color: var(--happy);
 }
@@ -215,13 +250,37 @@ a, button,
   padding: 8px 10px;
   flex-direction: column;
   gap: 5px;
+  /* the bars stay centred, so the X animation still lines up */
+  align-items: center;
+  justify-content: center;
 }
 .menu-toggle__bar {
   display: block;
   width: 22px;
   height: 2px;
   background: var(--white);
+  transition: transform .2s, opacity .2s;
 }
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(2) { opacity: 0; }
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* reading progress — sits on the header's bottom edge */
+.progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  overflow: hidden;
+}
+.progress__bar {
+  display: block;
+  height: 100%;
+  background: var(--omori); /* progress in OMORI purple, like the completion screen */
+  transform: scaleX(0);
+}
+[dir="rtl"] .progress__bar { transform-origin: right; }
+[dir="ltr"] .progress__bar { transform-origin: left; }
 
 /* ---------- layout ---------- */
 
@@ -230,7 +289,7 @@ main { position: relative; z-index: 1; }
 .section {
   padding: clamp(56px, 9vw, 110px) 0;
   position: relative;
-  scroll-margin-top: 64px;
+  scroll-margin-top: calc(var(--header-h) + 12px);
 }
 .section--alt {
   background: rgba(255, 255, 255, .03);
@@ -242,24 +301,26 @@ main { position: relative; z-index: 1; }
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
-.container--narrow { max-width: 780px; }
+.container--narrow { max-width: 820px; }
 
 .section-title {
   font-size: clamp(28px, 4.6vw, 44px);
   font-weight: normal;
   margin: 0 0 34px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
 }
-/* the game underlines key words with a hand-drawn white stroke */
+/* the game underlines key words with a hand-drawn white stroke —
+   the stroke sits under the title, growing from the reading start */
 .section-title::after {
   content: "";
-  flex: 0 0 64px;
+  display: block;
+  width: 64px;
   height: var(--border);
   background: var(--white);
   border-radius: 2px;
+  margin-top: 14px;
 }
+[dir="rtl"] .section-title::after { transform-origin: right; }
+[dir="ltr"] .section-title::after { transform-origin: left; }
 
 /* ---------- buttons — the game's white rounded outline box ---------- */
 
@@ -290,7 +351,8 @@ main { position: relative; z-index: 1; }
 }
 .btn:focus-visible,
 a:focus-visible,
-button:focus-visible {
+button:focus-visible,
+summary:focus-visible {
   outline: 3px solid var(--happy);
   outline-offset: 3px;
 }
@@ -311,7 +373,6 @@ button:focus-visible {
   color: var(--dim);
   font-size: clamp(15px, 2vw, 19px);
   margin: 0 0 10px;
-  letter-spacing: 1px;
 }
 
 .hero__title {
@@ -321,16 +382,12 @@ button:focus-visible {
   line-height: 1.25;
   animation: hero-in 1s ease-out both;
 }
-.hero__omori {
-  direction: ltr;
-  unicode-bidi: embed;
-  color: var(--omori);
-  letter-spacing: 8px;
-}
+/* Arabic: colour only. Letter-spacing would tear the cursive apart. */
+.hero__omori { color: var(--omori); }
 
 .hero__sub {
   color: var(--dim);
-  font-size: clamp(18px, 2.6vw, 24px);
+  font-size: clamp(17px, 2.3vw, 21px);
   margin: 14px 0 40px;
 }
 
@@ -341,6 +398,31 @@ button:focus-visible {
   flex-wrap: wrap;
 }
 
+.hero__scroll {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 34px auto 0;
+  border: 2px solid var(--faint);
+  border-radius: 50%;
+  transition: border-color .2s;
+}
+.hero__scroll:hover { border-color: var(--white); }
+.hero__scroll-arrow {
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--white);
+  border-bottom: 2px solid var(--white);
+  rotate: 45deg;
+  translate: 0 -3px;
+  animation: nudge 2.4s ease-in-out infinite;
+}
+@keyframes nudge {
+  0%, 100% { translate: 0 -3px; }
+  50%      { translate: 0 2px; }
+}
+
 @keyframes hero-in {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: none; }
@@ -349,9 +431,10 @@ button:focus-visible {
 /* ---------- about / stats ---------- */
 
 .about__lead {
-  font-size: clamp(20px, 2.6vw, 25px);
+  font-size: clamp(20px, 2.4vw, 24px);
   max-width: 70ch;
   margin: 0 0 44px;
+  line-height: 1.9;
 }
 .about__lead strong { color: var(--omori); font-weight: normal; }
 
@@ -375,10 +458,11 @@ button:focus-visible {
   display: block;
   font-size: clamp(30px, 4.4vw, 46px);
   color: var(--white);
+  font-variant-numeric: tabular-nums;
 }
-.stat__label { color: var(--dim); font-size: 16.5px; }
+.stat__label { color: var(--dim); font-size: 16.5px; font-family: var(--font-body); }
 
-.about__note { color: var(--dim); max-width: 62ch; }
+.about__note { color: var(--dim); max-width: 62ch; font-size: 18px; }
 
 .about__sub {
   font-weight: normal;
@@ -387,45 +471,92 @@ button:focus-visible {
   color: var(--white);
 }
 
-.dl__standalone {
-  color: var(--dim);
-  font-size: 17px;
-  line-height: 1.9;
-  margin: 0 0 22px;
-}
+/* ---------- illustrated feature blocks ---------- */
 
-/* screenshot grid without captions */
-.screen__slot { aspect-ratio: 4 / 3; }
-
-/* ---------- cards ---------- */
-
-.grid {
+.feats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
+  gap: 26px;
 }
-
-.card {
-  border: var(--border) solid var(--faint);
+/* every showcase card gets a quiet outline and a soft purple halo so the blocks
+   read apart on the black page */
+.feat {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  gap: 26px;
+  align-items: start;
+  border: 1px solid var(--faint);
   border-radius: var(--radius-lg);
-  padding: 26px 24px;
-  background: rgba(0, 0, 0, .35);
-  transition: border-color .2s, transform .2s;
+  padding: clamp(18px, 2.4vw, 26px);
+  box-shadow: 0 0 0 1px rgba(160, 32, 240, .10), 0 22px 62px -38px rgba(160, 32, 240, .60);
+  transition: border-color .25s ease, box-shadow .25s ease;
 }
-.card:hover { border-color: var(--white); transform: translateY(-3px); }
+.feat:hover {
+  border-color: rgba(160, 32, 240, .55);
+  box-shadow: 0 0 0 1px rgba(160, 32, 240, .26), 0 24px 74px -32px rgba(160, 32, 240, .85);
+}
+/* every other block flips sides so the page has a rhythm — the screenshots keep
+   the wider column on both sides, so the flip mirrors the block instead of
+   shrinking the pictures */
+.feat--rev { grid-template-columns: minmax(0, 6fr) minmax(0, 4fr); }
+.feat--rev .feat__text { order: 2; }
+/* a block with no screenshots */
+.feat--text { grid-template-columns: 1fr; }
 
-.card__title {
+.feat__title {
   margin: 0 0 12px;
   font-weight: normal;
-  font-size: 23px;
+  font-size: 24px;
   color: var(--omori);
 }
-.card p {
-  margin: 0;
+.feat__text p {
+  margin: 0 0 14px;
   color: var(--dim);
   font-size: 18px;
-  line-height: 1.95;
 }
+.feat__text p:last-child { margin-bottom: 0; }
+.feat__note {
+  border-inline-start: 3px solid var(--happy);
+  padding-inline-start: 14px;
+  font-size: 16.5px;
+}
+
+/* a group of screenshots inside a feature block: two per row is the most we show */
+.plate {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+/* a lone screenshot takes the whole row instead of leaving half of it empty, but
+   it keeps a comfortable size instead of stretching across the plate */
+.plate > .shot:only-child {
+  grid-column: 1 / -1;
+  width: min(100%, 420px);
+  justify-self: center;
+}
+/* the font close-ups are very wide, very short strips: across the whole column
+   they read as banners, so they are capped and centred instead */
+.plate--wide {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+.plate--wide .shot { width: min(100%, 420px); }
+
+.shot {
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  /* screenshots ease in as they scroll into view. The hidden state is applied by
+     the script itself (.is-pending), so if scripting is off the pictures simply
+     show — nothing can ever get stuck invisible. */
+  transition: opacity .55s ease, transform .55s ease;
+}
+.shot.is-pending { opacity: 0; transform: translateY(12px); }
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 
 /* ---------- download ---------- */
 
@@ -448,11 +579,24 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
 }
+.dl--soon { border-style: dashed; }
 .dl__title {
   margin: 0 0 16px;
   font-weight: normal;
   font-size: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
+.dl__badge {
+  font-size: 14px;
+  border: 2px solid var(--happy);
+  color: var(--happy);
+  border-radius: 999px;
+  padding: 1px 12px;
+}
+.dl__badge--soon { border-color: var(--dim); color: var(--dim); }
 .dl__reqs {
   list-style: none;
   padding: 0;
@@ -471,10 +615,51 @@ button:focus-visible {
   color: var(--dim);
   font-size: 17px;
 }
-.dl__steps li { margin-bottom: 6px; }
+.dl__steps li { margin-bottom: 8px; }
 .dl__steps li::marker { color: var(--happy); }
 .dl__btn { margin-top: auto; }
-.dl__steps-hint { color: var(--dim); font-size: 16px; margin: 0 0 18px; }
+.dl__steps-hint { color: var(--dim); font-size: 15.5px; margin: 0 0 18px; }
+
+.dl__meta {
+  color: var(--dim);
+  font-size: 16.5px;
+  margin: 0 0 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--faint);
+}
+.dl__note {
+  color: var(--dim);
+  font-size: 16.5px;
+  margin: 0 0 18px;
+  border-inline-start: 3px solid var(--faint);
+  padding-inline-start: 14px;
+}
+.dl__verify { margin: 0 0 18px; }
+.dl__verify summary {
+  color: var(--dim);
+  font-size: 16px;
+  font-family: var(--font);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dl__verify summary::-webkit-details-marker { display: none; }
+.dl__verify summary::before {
+  content: "+";
+  color: var(--happy);
+  font-size: 19px;
+}
+.dl__verify[open] summary::before { content: "−"; }
+.dl__verify p { color: var(--dim); font-size: 15.5px; margin: 10px 0 0; }
+.dl__hash {
+  font-size: 12.5px;
+  word-break: break-all;
+  color: var(--dim);
+  background: rgba(255, 255, 255, .05);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
 
 .dl-msg {
   margin: 26px 0 0;
@@ -483,17 +668,16 @@ button:focus-visible {
   border-radius: var(--radius);
   color: var(--happy);
 }
+.dl-msg[hidden] { display: none; }
 
 /* ---------- gallery / video ---------- */
-
-.gallery-note { color: var(--dim); margin: -18px 0 30px; }
 
 .video-frame {
   position: relative;
   max-width: 880px;
-  margin: 0 auto 40px;
-  border: var(--border) solid var(--line);
-  border-radius: var(--radius-lg);
+  margin: 0 auto 44px;
+  border: 0;
+  border-radius: 0;
   overflow: hidden;
   background: var(--black);
   aspect-ratio: 16 / 9;
@@ -523,12 +707,17 @@ button:focus-visible {
 .video-cover:hover { background: rgba(0, 0, 0, .35); }
 .video-cover[hidden] { display: none; }
 
-.video-cover__triangle {
-  width: 0; height: 0;
-  border-block: 22px solid transparent;
-  border-inline-start: 36px solid var(--white);
-  margin-inline-start: 8px; /* optical centering of a right-pointing triangle */
+/* the play glyph is an inline SVG, so it never mirrors in RTL */
+.video-cover__icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: 3px solid var(--white);
+  border-radius: 50%;
+  padding-inline-start: 5px;
 }
+.video-cover__icon svg { display: block; }
 .video-cover__label { font-size: 19px; }
 
 /* pause/play control shown while the video runs */
@@ -541,86 +730,73 @@ button:focus-visible {
   border: 2px solid var(--white);
   border-radius: 12px;
   background: rgba(0, 0, 0, .6);
+  color: var(--white);
   display: grid;
   place-items: center;
   transition: background .15s;
 }
 .video-ctrl:hover { background: rgba(0, 0, 0, .85); }
 .video-ctrl[hidden] { display: none; }
-.video-ctrl__icon--pause {
-  width: 14px;
-  height: 16px;
-  border-inline-start: 5px solid var(--white);
-  border-inline-end: 5px solid var(--white);
-}
-.video-ctrl__icon--play {
-  width: 0;
-  height: 0;
-  border-block: 9px solid transparent;
-  border-inline-start: 15px solid var(--white);
-  margin-inline-start: 3px;
-}
+.video-ctrl__icon { display: grid; place-items: center; }
 
-.screens {
+/* ---------- gallery: screenshot grid ---------- */
+
+/* the same grid serves both the gallery and the feature plates —
+   two images per row is the maximum we show */
+.plates {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
-.screen { margin: 0; }
-.screen__slot {
-  aspect-ratio: 4 / 3;
-  border: var(--border) dashed var(--faint);
-  border-radius: var(--radius);
-  display: grid;
-  place-items: center;
-  color: var(--faint);
-  font-size: 15px;
-  background:
-    repeating-linear-gradient(45deg, transparent 0 12px, rgba(255,255,255,.02) 12px 24px);
-}
-.screen--extra { display: none; }
-.screen--extra.has-img { display: block; }
-.screen__slot.has-img {
-  border-style: solid;
-  border-color: var(--line);
-}
-.screen__slot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.plates .shot { display: flex; flex-direction: column; }
+.shot--grid[hidden] { display: none; }
+
+.shot__open {
   display: block;
-  border-radius: calc(var(--radius) - 3px);
-}
-.screen figcaption {
-  text-align: center;
-  color: var(--dim);
-  font-size: 16px;
-  margin-top: 10px;
-}
-
-/* ---------- issues ---------- */
-
-.issues-note { color: var(--dim); margin: -18px 0 30px; }
-.issues {
-  list-style: none;
+  width: 100%;
   padding: 0;
-  margin: 0;
-  max-width: 760px;
+  border: 0;
+  background: none;
+  overflow: hidden;
 }
-.issues li {
-  padding: 14px 18px;
-  border-inline-start: var(--border) solid var(--angry);
-  background: rgba(255, 0, 60, .05);
-  /* sharp corners on the bar side, rounded on the far side — flips with dir */
-  border-start-start-radius: 0;
-  border-start-end-radius: var(--radius);
-  border-end-end-radius: var(--radius);
-  border-end-start-radius: 0;
+.shot__open img { transition: transform .35s ease; }
+.shot__open:hover img { transform: scale(1.04); }
+
+/* ---------- FAQ (native details, no JS needed) ---------- */
+
+.faq { max-width: 800px; }
+.faq__item {
+  border: var(--border) solid var(--faint);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, .35);
   margin-bottom: 12px;
+  transition: border-color .2s;
+}
+.faq__item:hover { border-color: var(--line); }
+.faq__item[open] { border-color: var(--white); }
+.faq__item summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 15px 20px;
+  font-size: 20px;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after {
+  content: "+";
+  color: var(--happy);
+  font-size: 24px;
+  line-height: 1;
+}
+.faq__item[open] summary::after { content: "−"; }
+.faq__item p {
+  margin: 0;
+  padding: 0 20px 18px;
   color: var(--dim);
   font-size: 18px;
 }
-.issues li strong { color: var(--white); font-weight: normal; }
 
 /* ---------- credits — mirrors the game's own credits screen ---------- */
 
@@ -650,64 +826,96 @@ button:focus-visible {
   vertical-align: -6px;
   filter: drop-shadow(0 0 4px rgba(255, 255, 255, .2));
 }
-/* header brand lockup: [eternal-dream logo] × [OMORI logo] فريق أوموري بالعربي */
-.brand__collab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.brand__title-logo {
-  height: 26px;
-  width: auto;
-  opacity: .95;
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, .25));
-}
-.brand .team-brand__logo { height: 24px; }
-.brand__x {
-  color: var(--purple, #b14aed);
-  margin: 0 6px;
-  font-size: .8em;
-}
-/* OneLoader download links inside requirement/step lists */
+/* OneLoader / Steam links inside requirement and step lists */
 .dl-link {
-  color: var(--yellow, #ffd11f);
+  color: var(--happy);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .dl-link:hover { color: #fff; }
-@media (max-width: 620px) {
-  .brand__x { display: none; }
-}
 
-.credits {
+/* roles as groups: free-flowing columns, no enclosing box — each role is
+   a dim label over its names, separated by purple • dots like the game's
+   credits roll */
+.creds {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 30px 34px;
+}
+.creds__group {
+  border-top: 1px solid var(--faint);
+  padding-top: 12px;
+  transition: border-color .2s;
+}
+.creds__group:hover { border-color: var(--dim); }
+.creds .creds__role { /* beats the :is() heading-font rule (0,1,1) */
+  margin: 0 0 4px;
+  font-weight: normal;
+  font-size: 18px;
+  color: var(--line);
+  font-family: var(--font-body);
+}
+.creds__names {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-.cr {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-  padding: 13px 6px;
-  border-bottom: 1px solid var(--faint);
-}
-.cr:last-child { border-bottom: 0; }
-.cr__role { color: var(--dim); font-size: 17px; text-align: start; }
-.cr__name {
-  order: -1;               /* name on the right, like the game's RTL credits */
-  font-size: 21px;
-  white-space: nowrap;
-}
-.cr__name--lead { color: var(--omori); }
-
-.cr-special {
-  text-align: center;
-  margin: 44px 0 0;
   font-size: 20px;
+  line-height: 1.9;
+}
+/* names keep together on one line — "بلاك (أونكس)" never splits across lines */
+.creds__names li { display: inline; white-space: nowrap; }
+.creds__names li + li::before {
+  content: "•";
+  color: var(--omori);
+  margin: 0 10px;
+  font-size: .8em;
+  vertical-align: 2px;
+}
+.cred-alias { color: var(--dim); font-size: .88em; }
+
+/* special thanks — a flowing roll call separated by •, long notes stay
+   readable inline in small body type */
+.thanks { margin: 34px 0 0; text-align: center; }
+.thanks__title {
+  margin: 0 0 10px;
+  font-weight: normal;
+  font-size: 19px;
   color: var(--dim);
 }
-.cr-you { color: var(--white); }
+.thanks__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 72ch;
+  font-size: 20px;   /* same tier as the credit names above */
+  line-height: 2.1;
+}
+.thanks__list li { display: inline; }
+/* a Latin name such as "sumairi (PEPO)" stays whole — the note beside it still wraps */
+.thanks__list li > .latin { white-space: nowrap; }
+/* "thanks:" reads as a label on its own line, never as one of the names —
+   two classes so it beats the `.thanks__list li { display: inline }` above */
+.thanks__list .thanks__lead {
+  display: block;
+  margin-top: 12px;
+  color: var(--dim);
+  font-size: .85em;
+}
+/* no • touches the label, on either side of it */
+.thanks__list .thanks__lead::before,
+.thanks__list .thanks__lead + li::before { content: none; }
+.thanks__list li + li::before {
+  content: "•";
+  color: var(--omori);
+  margin: 0 9px;
+  font-size: .75em;
+  vertical-align: 2px;
+}
+.thanks__note {
+  color: var(--dim);
+  font-size: 15.5px;
+}
+.thanks__you { margin: 18px 0 0; font-size: 24px; color: var(--omori); }
 
 /* ---------- community links (under "special thanks") ---------- */
 
@@ -727,7 +935,7 @@ button:focus-visible {
   border-radius: var(--radius);
   color: var(--dim);
   text-decoration: none;
-  font-size: 15px;
+  font-size: 15.5px;
   transition: border-color .2s, color .2s, transform .2s;
 }
 .community__link:hover {
@@ -772,7 +980,7 @@ button:focus-visible {
 
 /* inline steam link on the OMORI word in requirements */
 .steam-link {
-  color: var(--happy, #ffd11f);
+  color: var(--happy);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: rgba(255, 209, 31, .4);
@@ -785,13 +993,61 @@ button:focus-visible {
   position: relative;
   z-index: 1;
   border-top: 1px solid var(--faint);
-  padding: 34px var(--gutter) 44px;
+  /* the last line clears the floating "back to top" button */
+  padding: 38px var(--gutter) 76px;
   text-align: center;
-  color: var(--faint);
-  font-size: 16px;
+  color: var(--dim);
+  font-size: 16.5px;
 }
-.site-footer p { margin: 6px 0; }
-.site-footer__small { opacity: .7; }
+.site-footer p { margin: 8px 0; }
+/* the footer wordmark is shown exactly as it is — no glow, no rays */
+.site-footer__markwrap {
+  display: inline-block;
+  line-height: 0;
+  margin-bottom: 16px;
+}
+.site-footer__mark {
+  display: block;
+  width: clamp(170px, 20vw, 230px);
+  height: auto;
+  opacity: .9;
+}
+.site-footer__small { font-size: 15.5px; }
+.site-footer__line + .site-footer__line::before {
+  content: " · ";
+  color: var(--faint);
+}
+.site-footer__langs {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  margin-top: 18px;
+  font-size: 15.5px;
+}
+.site-footer__langs a { color: var(--dim); text-decoration: none; }
+.site-footer__langs a:hover,
+.site-footer__langs a[aria-current="true"] { color: var(--white); }
+
+/* ---------- back to top ---------- */
+
+.to-top {
+  position: fixed;
+  inset-inline-start: 22px;
+  bottom: 22px;
+  z-index: 60;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--white);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .75);
+  color: var(--white);
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  transition: background .18s, transform .18s;
+}
+.to-top:hover { background: var(--white); color: var(--black); transform: translateY(-2px); }
+.to-top[hidden] { display: none; }
 
 /* ---------- game-feel animations (all subtle, all optional) ---------- */
 
@@ -802,7 +1058,7 @@ button:focus-visible {
 }
 .hero__title { animation: hero-in 1s ease-out both, omori-blink 7s ease-in-out 2.5s infinite; }
 
-/* download buttons breathe very slightly — the only pulsing element on the page */
+/* the primary download button breathes very slightly */
 @keyframes btn-breathe {
   0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
   50% { box-shadow: 0 0 18px 2px rgba(255, 255, 255, .18); }
@@ -810,71 +1066,99 @@ button:focus-visible {
 .btn--primary { animation: btn-breathe 3.2s ease-in-out infinite; }
 .btn--primary:hover { animation: none; }
 
-/* cards: the emotion-shift on hover — tilt + colored edge light */
-.card, .dl, .stat { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
-.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, .6); }
-.dl:hover { border-color: var(--white); }
-.stat:hover { transform: translateY(-2px); }
-
-/* screenshots: gentle zoom on hover */
-.screen__slot { overflow: hidden; transition: border-color .2s; }
-.screen__slot:hover { border-color: var(--white); }
-.screen__slot img { transition: transform .35s ease; }
-.screen__slot:hover img { transform: scale(1.04); }
-
-/* section titles: white stroke slides in */
-.section-title::after { transform-origin: right; }
-.reveal.is-in .section-title::after,
+/* section titles: the white stroke slides in */
 section .section-title::after { animation: stroke-in .8s ease both; }
 @keyframes stroke-in {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
 
-/* credits rows: hover highlight like the game's selection hand */
-.cr { transition: background .15s, padding .15s; border-radius: 8px; }
-.cr:hover { background: rgba(255, 255, 255, .04); }
+/* screenshots breathe a little on hover */
+.shot { transition: border-color .2s, box-shadow .25s ease; }
+.shot:hover { box-shadow: 0 10px 26px rgba(0, 0, 0, .55); }
 
-/* lightbox */
+/* ---------- lightbox ---------- */
+
 .lightbox {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: rgba(0, 0, 0, .92);
+  background: rgba(0, 0, 0, .94);
   display: none;
-  place-items: center;
-  padding: 24px;
-  overflow: hidden;
+  padding: clamp(52px, 8vh, 80px) clamp(16px, 6vw, 96px);
 }
-.lightbox.is-open { display: grid; }
-.lightbox img {
-  max-width: min(1200px, 94vw);
-  max-height: 88vh;
+.lightbox.is-open { display: grid; place-items: center; }
+.lightbox__frame {
+  margin: 0;
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  max-height: 100%;
+}
+.lightbox__img {
+  max-width: min(1200px, 92vw);
+  max-height: 72vh;
+  width: auto;
+  height: auto;
   border: var(--border) solid var(--line);
   border-radius: var(--radius-lg);
+  background: var(--black);
 }
-.lightbox__close {
-  position: absolute;
-  top: 18px;
-  inset-inline-start: 18px;
-  width: 46px;
-  height: 46px;
+.lightbox__cap {
+  color: var(--white);
+  font-size: 19px;
+  text-align: center;
+  margin: 0;
+}
+.lightbox__counter {
+  position: fixed;
+  bottom: 18px;
+  inset-inline: 0;
+  margin: 0;
+  text-align: center;
+  color: var(--dim);
+  font-size: 15px;
+}
+.lightbox__close,
+.lightbox__nav {
+  position: fixed;
   border: 2px solid var(--white);
-  border-radius: 12px;
+  border-radius: 14px;
   background: rgba(0, 0, 0, .6);
   color: var(--white);
-  font-size: 26px;
-  line-height: 1;
+  display: grid;
+  place-items: center;
+  transition: background .15s, transform .15s;
 }
+.lightbox__close:hover,
+.lightbox__nav:hover { background: rgba(255, 255, 255, .16); }
+.lightbox__close {
+  top: 16px;
+  inset-inline-start: 16px;
+  width: 46px;
+  height: 46px;
+}
+.lightbox__nav {
+  top: 50%;
+  translate: 0 -50%;
+  width: 52px;
+  height: 52px;
+}
+.lightbox__nav--prev { inset-inline-start: 14px; }
+.lightbox__nav--next { inset-inline-end: 14px; }
+.lightbox__nav[hidden] { display: none; }
+/* in RTL the arrows flip so "previous" still points towards the reading start */
+[dir="rtl"] .lightbox__nav svg { transform: scaleX(-1); }
+.lightbox__close svg { display: block; }
 
-/* ---------- reveal on scroll ---------- */
+/* ---------- reveal on scroll (only when JS is available) ---------- */
 
-.reveal {
+.js .reveal {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity .6s ease, transform .6s ease;
 }
-.reveal.is-in {
+.js .reveal.is-in {
   opacity: 1;
   transform: none;
 }
@@ -882,15 +1166,16 @@ section .section-title::after { animation: stroke-in .8s ease both; }
 /* ---------- responsive ---------- */
 
 @media (max-width: 960px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
   .stats { grid-template-columns: repeat(2, 1fr); }
-  .screens { grid-template-columns: repeat(2, 1fr); }
+  .plates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .feat { grid-template-columns: 1fr; }
+  .feat--rev .feat__text { order: 0; }
 }
 
 @media (max-width: 760px) {
   .nav {
     position: fixed;
-    top: 57px;
+    top: var(--header-h);
     right: 0; left: 0;
     flex-direction: column;
     gap: 0;
@@ -906,24 +1191,26 @@ section .section-title::after { animation: stroke-in .8s ease both; }
     border-bottom: none;
     font-size: 19px;
   }
-  .menu-toggle { display: flex; }
-  .lang-switch { position: relative; z-index: 60; }
+  /* phones: both header controls get a comfortable 44px touch target */
+  .menu-toggle { display: flex; min-width: 44px; min-height: 44px; }
+  .lang-switch { position: relative; z-index: 60; min-height: 44px; }
 
   .download-grid { grid-template-columns: 1fr; }
 
-  .cr { flex-direction: column-reverse; align-items: flex-start; gap: 2px; }
-  .cr__name { white-space: normal; }
+  .creds { grid-template-columns: 1fr; }
+  .thanks__list { font-size: 18px; }
 }
 
 @media (max-width: 520px) {
-  .grid { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .hero__actions .btn { width: 100%; }
-  .screens { grid-template-columns: 1fr; }
-  .video-cover__triangle {
-    border-block-width: 16px;
-    border-inline-start-width: 26px;
-  }
+  .plates { grid-template-columns: 1fr; }
+  .plate { grid-template-columns: 1fr; }
+  .brand__name { display: none; }
+  .feat { padding: 18px 16px; }
+  .lightbox { padding: 56px 12px; }
+  .lightbox__nav { width: 44px; height: 44px; }
+  .to-top { inset-inline-start: 14px; bottom: 14px; }
 }
 
 /* ---------- reduced motion ---------- */
@@ -931,9 +1218,10 @@ section .section-title::after { animation: stroke-in .8s ease both; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .stars__layer { animation: none; opacity: .6; }
-  .hero__title, .btn--primary { animation: none; }
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .btn:hover, .card:hover, .stat:hover { transform: none; }
-  .screen__slot:hover img { transform: none; }
+  .hero__title, .btn--primary, .hero__scroll-arrow { animation: none; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .shot.is-pending { opacity: 1; transform: none; transition: none; }
+  .btn:hover, .stat:hover, .community__link:hover, .to-top:hover { transform: none; }
+  .shot__open:hover img { transform: none; }
   * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
