@@ -63,13 +63,13 @@ body {
 :is(body, h1, h2, h3, h4, .hero__kicker, .btn, .nav a, .stat__num, .about__lead, .cr-teams,
     .creds__names, .thanks__title, .thanks__you, .dl__title, .dl__badge,
     .faq__item summary, .lang-switch, .lightbox__cap, .video-cover__label,
-    .community__link, .steam-cta__btn, .brand__name, .lightbox__counter) {
+    .community__link, .steam-cta__btn, .lightbox__counter) {
   font-family: var(--font);
 }
 
 .faq__item p, .about__note, .thanks__note, .cred-alias, .dl__reqs li, .dl__steps li,
-.dl__meta, .dl__note, .dl__verify p, .download-note,
-.site-footer p, .section--download .download-note, .feat__note {
+.dl__meta, .dl__note, .download-note,
+.site-footer p, .section--download .download-note {
   font-family: var(--font);
 }
 
@@ -186,7 +186,6 @@ a, button, summary,
   color: var(--white);
   white-space: nowrap;
 }
-.brand__name { font-size: 21px; }
 
 /* header brand lockup: [OMORI logo] × [eternal-dream logo] */
 .brand__collab {
@@ -514,11 +513,6 @@ summary:focus-visible {
   font-size: 18px;
 }
 .feat__text p:last-child { margin-bottom: 0; }
-.feat__note {
-  border-inline-start: 3px solid var(--happy);
-  padding-inline-start: 14px;
-  font-size: 16.5px;
-}
 
 /* a group of screenshots inside a feature block: two per row is the most we show */
 .plate {
@@ -579,7 +573,6 @@ summary:focus-visible {
   display: flex;
   flex-direction: column;
 }
-.dl--soon { border-style: dashed; }
 .dl__title {
   margin: 0 0 16px;
   font-weight: normal;
@@ -596,7 +589,6 @@ summary:focus-visible {
   border-radius: 999px;
   padding: 1px 12px;
 }
-.dl__badge--soon { border-color: var(--dim); color: var(--dim); }
 .dl__reqs {
   list-style: none;
   padding: 0;
@@ -634,33 +626,6 @@ summary:focus-visible {
   border-inline-start: 3px solid var(--faint);
   padding-inline-start: 14px;
 }
-.dl__verify { margin: 0 0 18px; }
-.dl__verify summary {
-  color: var(--dim);
-  font-size: 16px;
-  font-family: var(--font);
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.dl__verify summary::-webkit-details-marker { display: none; }
-.dl__verify summary::before {
-  content: "+";
-  color: var(--happy);
-  font-size: 19px;
-}
-.dl__verify[open] summary::before { content: "−"; }
-.dl__verify p { color: var(--dim); font-size: 15.5px; margin: 10px 0 0; }
-.dl__hash {
-  font-size: 12.5px;
-  word-break: break-all;
-  color: var(--dim);
-  background: rgba(255, 255, 255, .05);
-  border-radius: 8px;
-  padding: 8px 10px;
-}
-
 .dl-msg {
   margin: 26px 0 0;
   padding: 14px 20px;
@@ -1206,7 +1171,6 @@ section .section-title::after { animation: stroke-in .8s ease both; }
   .hero__actions .btn { width: 100%; }
   .plates { grid-template-columns: 1fr; }
   .plate { grid-template-columns: 1fr; }
-  .brand__name { display: none; }
   .feat { padding: 18px 16px; }
   .lightbox { padding: 56px 12px; }
   .lightbox__nav { width: 44px; height: 44px; }

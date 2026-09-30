@@ -10,19 +10,29 @@
    visitor sees them too); this object keeps every page in
    sync from one edit.
 
-   links.android === '' means "not published yet": the button
-   then explains itself instead of leading to a dead URL.
+   A data-site attribute names a path into this object —
+   "build", or "size-pc" for SITE.size.pc — and every value
+   shaped { ar, en } follows the language of the page.
+
+   An empty link means "not published yet": the button then
+   explains itself instead of leading to a dead URL.
    --------------------------------------------------------- */
 const SITE = {
   version: '1.3',                                    // the localization's own version
   build: 'v1.0.8.1',                                 // the released build's tag
-  sha256: '0aa8ffdda90793f43c9d9fb494b724bbaddcc1cd23f2ada778f5c392ab89d40d',
   links: {
     pc: 'https://github.com/YLBlack/omoriAR-website/releases/download/v1.0.8.1/Omori.AR.release.zip',
-    android: '',                                     // still being prepared
+    // Android ships as a delta patch, not a ready-made APK:
+    android: 'https://github.com/YLBlack/omoriAR-website/releases/download/v1.0.8.1/OmoriAR_patch.xdelta',
   },
-  size: { ar: '77 م.ب', en: '77 MB' },
-  date: { ar: '28 سبتمبر 2026', en: '28 September 2026' },
+  size: {
+    pc: { ar: '77 م.ب', en: '77 MB' },
+    android: { ar: '153 م.ب', en: '153 MB' },
+  },
+  date: {
+    pc: { ar: '28 سبتمبر 2026', en: '28 September 2026' },
+    android: { ar: '30 سبتمبر 2026', en: '30 September 2026' },
+  },
   updated: { ar: 'سبتمبر 2026', en: 'September 2026' },
 };
 
@@ -31,7 +41,7 @@ const IS_RTL = document.documentElement.dir === 'rtl';
 
 const T = {
   ar: {
-    androidSoon: 'نسخة الأندرويد قيد التجهيز ولم تُرفع بعد — تابع قنوات الفريق ليصلك الإعلان، وستصدر بأرقام البطاقة نفسها.',
+    linkSoon: 'الرابط غير متاح حالياً — تابع قنوات الفريق ليصلك الإعلان.',
     play: 'تشغيل',
     pause: 'إيقاف مؤقت',
     replay: 'شغّل المقطع',
@@ -44,7 +54,7 @@ const T = {
     shotAlt: 'لقطة من التعريب',
   },
   en: {
-    androidSoon: 'The Android build is still being prepared — follow the team channels for the announcement.',
+    linkSoon: 'That file is not available right now — follow the team channels for the announcement.',
     play: 'Play',
     pause: 'Pause',
     replay: 'Play again',
@@ -70,12 +80,10 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
   /* ---------- keep the release facts in sync ---------- */
 
   $$('[data-site]').forEach((el) => {
-    const key = el.getAttribute('data-site');
-    const value = key === 'sha' ? SITE.sha256
-      : key === 'size' ? SITE.size[LANG]
-        : key === 'date' ? SITE.date[LANG]
-          : key === 'updated' ? SITE.updated[LANG]
-            : SITE[key];
+    const leaf = el.getAttribute('data-site')
+      .split('-')
+      .reduce((node, key) => (node == null ? node : node[key]), SITE);
+    const value = leaf && typeof leaf === 'object' ? leaf[LANG] : leaf;
     if (value) el.textContent = value;
   });
 
@@ -101,7 +109,7 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
       if (url) {
         window.open(url, '_blank', 'noopener');
       } else {
-        showDlMsg(t.androidSoon);
+        showDlMsg(t.linkSoon);
       }
     });
   });

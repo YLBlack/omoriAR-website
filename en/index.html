@@ -78,7 +78,6 @@
         <span class="brand__x" aria-hidden="true">×</span>
         <img class="brand__title-logo" src="../assets/img/omori-title-logo.png" alt="" width="24" height="26">
       </span>
-      <span class="brand__name"></span>
     </a>
     <nav class="nav" id="site-nav" aria-label="Main navigation">
       <a href="#about">The patch</a>
@@ -113,7 +112,7 @@
     <div class="hero__content reveal">
       <p class="hero__kicker">Black · <span class="team-brand"><img class="team-brand__logo team-brand__logo--sm" src="../assets/img/etrdream-logo.png" alt="The Eternal Dream logo" width="17" height="22" loading="lazy">The Eternal Dream</span> · <span class="team-brand"><img class="team-brand__logo team-brand__logo--sm" src="../assets/img/omori-title-logo.png" alt="Omori AR logo" width="20" height="22" loading="lazy">Omori AR</span></p>
       <h1 class="hero__title">OMORI <span class="hero__omori">in Arabic</span></h1>
-      <p class="hero__sub">The complete Arabic fan localization — every line of dialogue, every menu, every battle log, the font itself.Made specifically for the Arab OMORI community.</p>
+      <p class="hero__sub">The complete Arabic fan localization — every line of dialogue, every menu, every battle log, the font itself — made specifically for the Arab OMORI community.</p>
       <div class="hero__actions">
         <a class="btn btn--primary" href="#download">Get the patch</a>
         <a class="btn btn--ghost" href="#gallery">See it in action</a>
@@ -145,7 +144,7 @@
             <span class="stat__label">redrawn images</span>
           </li>
           <li class="stat reveal">
-            <span class="stat__num" data-count="25">25</span>
+            <span class="stat__num" data-count="26">26</span>
             <span class="stat__label">technical plugins</span>
           </li>
           <li class="stat reveal">
@@ -259,23 +258,28 @@
           </ul>
           <p class="dl__meta">
             Patch file <span class="latin" data-site="build">v1.0.8.1</span> ·
-            <span data-site="size">77 MB</span> ·
-            released <span data-site="date">28 September 2026</span>
+            <span data-site="size-pc">77 MB</span> ·
+            released <span data-site="date-pc">28 September 2026</span>
           </p>
           <p class="dl__steps-hint">Install steps below ↓</p>
           <button class="btn btn--primary dl__btn" type="button" data-download="pc">Download for PC</button>
         </article>
 
-        <article class="dl dl--soon reveal" id="dl-android">
-          <h3 class="dl__title">Android <span class="dl__badge dl__badge--soon">coming soon</span></h3>
+        <article class="dl reveal" id="dl-android">
+          <h3 class="dl__title">Android <span class="dl__badge">available now</span></h3>
           <ul class="dl__reqs" role="list">
-            <li>A standalone build of the whole game with Arabic built in (<span class="latin">APK</span>)</li>
-            <li>Android <span class="latin">9</span> or newer</li>
-            <li>About <span class="latin">2&nbsp;GB</span> of space</li>
+            <li>The English Android build of OMORI — the unofficial port, version <span class="latin">v1.0.8.1</span></li>
+            <li><a class="latin dl-link" href="https://play.google.com/store/apps/details?id=org.emunix.unipatcher" target="_blank" rel="noopener">UniPatcher</a>, to merge the patch on the phone</li>
+            <li>Android <span class="latin">9</span> or newer — and about <span class="latin">3&nbsp;GB</span> of extra space</li>
           </ul>
-          <p class="dl__note" id="dl-android-note">The Android build is still being prepared and has not been uploaded yet — follow the team channels for the announcement. The install steps below already apply to it.</p>
+          <p class="dl__meta">
+            Delta file <span class="latin">OmoriAR_patch.xdelta</span> ·
+            <span data-site="size-android">153 MB</span> ·
+            released <span data-site="date-android">30 September 2026</span>
+          </p>
+          <p class="dl__note" id="dl-android-note">The Android patch ships as a delta file, not as a ready-made app: you merge it into the English build yourself with <span class="latin">UniPatcher</span>, and out comes the full game in Arabic.</p>
           <p class="dl__steps-hint">Install steps below ↓</p>
-          <button class="btn btn--ghost dl__btn" type="button" data-download="android" aria-describedby="dl-android-note">Android build — coming soon</button>
+          <button class="btn btn--primary dl__btn" type="button" data-download="android" aria-describedby="dl-android-note">Download the Android delta</button>
         </article>
       </div>
 
@@ -306,13 +310,16 @@
           </ol>
         </article>
         <article class="dl reveal">
-          <h3 class="dl__title">Android <span class="dl__badge dl__badge--soon">coming soon</span></h3>
+          <h3 class="dl__title">Android</h3>
           <ol class="dl__steps">
-            <li>Download the <span class="latin">APK</span> above.</li>
-            <li>Install it like any app (enable "unknown sources" if asked).</li>
-            <li>Launch the game — everything is in Arabic from first boot.</li>
+            <li>Download the delta file <span class="latin">OmoriAR_patch.xdelta</span> above.</li>
+            <li>Download the English Android build of OMORI (the unofficial port, <span class="latin">v1.0.8.1</span>) — it has to be the unmodified original, since that is what the patch was built from.</li>
+            <li>Install <a class="latin dl-link" href="https://play.google.com/store/apps/details?id=org.emunix.unipatcher" target="_blank" rel="noopener">UniPatcher</a> from Google Play.</li>
+            <li>Open <span class="latin">Apply patch</span> in it and pick the three files: <span class="latin">Patch file</span> → the delta, <span class="latin">ROM file</span> → the English build, <span class="latin">Output file</span> → a name and place for the patched copy.</li>
+            <li>Tap the merge button and wait — you get a new <span class="latin">APK</span>, which is OMORI in Arabic.</li>
+            <li>Install that file (enable "unknown sources" if asked), then launch the game — everything is in Arabic from first boot.</li>
           </ol>
-          <p class="dl__note">These steps are for the Android build, which is still being prepared. If you get an <span class="latin">APK</span> from outside the team's channels, don't install it.</p>
+          <p class="dl__note">If the merge fails, the build you picked is usually modified or a different version — the patch only works on the exact unmodified original. And don't install any ready-made <span class="latin">APK</span> from outside the team's channels.</p>
         </article>
       </div>
     </div>
@@ -480,6 +487,12 @@
           <ul class="creds__names" role="list">
             <li>kitsou</li>
             <li>Black <span class="cred-alias">(Onyx)</span></li>
+          </ul>
+        </div>
+        <div class="creds__group">
+          <h3 class="creds__role">Porting</h3>
+          <ul class="creds__names" role="list">
+            <li>Akai</li>
           </ul>
         </div>
         <div class="creds__group">

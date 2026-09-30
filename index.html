@@ -72,7 +72,6 @@
         <span class="brand__x latin">×</span>
         <img class="team-brand__logo" src="assets/img/etrdream-logo.png" alt="" width="22" height="30">
       </span>
-      <span class="brand__name"></span>
     </a>
     <nav class="nav" id="site-nav" aria-label="التنقل الرئيسي">
       <a href="#about">التعريب</a>
@@ -139,7 +138,7 @@
             <span class="stat__label">صورة معرّبة</span>
           </li>
           <li class="stat reveal">
-            <span class="stat__num" data-count="25">25</span>
+            <span class="stat__num" data-count="26">26</span>
             <span class="stat__label">إضافة تقنية</span>
           </li>
           <li class="stat reveal">
@@ -256,23 +255,28 @@
           </ul>
           <p class="dl__meta">
             ملف التعريب <span class="latin" data-site="build">v1.0.8.1</span> ·
-            الحجم <span data-site="size">77 م.ب</span> ·
-            صدر في <span data-site="date">28 سبتمبر 2026</span>
+            الحجم <span data-site="size-pc">77 م.ب</span> ·
+            صدر في <span data-site="date-pc">28 سبتمبر 2026</span>
           </p>
           <p class="dl__steps-hint">خطوات التثبيت في الأسفل ↓</p>
           <button class="btn btn--primary dl__btn" type="button" data-download="pc">حمّل نسخة الحاسوب</button>
         </article>
 
-        <article class="dl dl--soon reveal" id="dl-android">
-          <h3 class="dl__title">أندرويد <span class="dl__badge dl__badge--soon">قريباً</span></h3>
+        <article class="dl reveal" id="dl-android">
+          <h3 class="dl__title">أندرويد <span class="dl__badge">متاح الآن</span></h3>
           <ul class="dl__reqs" role="list">
-            <li>لعبة كاملة مستقلة، والعربية مدمجة داخلها في ملف واحد (<span class="latin">APK</span>)</li>
-            <li>أندرويد <span class="latin">9</span> أو أحدث</li>
-            <li>مساحة إضافية: نحو <span class="latin">2&nbsp;GB</span></li>
+            <li>نسخة أوموري الإنجليزية للأندرويد — البورت غير الرسمي بإصدار <span class="latin">v1.0.8.1</span></li>
+            <li>تطبيق <a class="latin dl-link" href="https://play.google.com/store/apps/details?id=org.emunix.unipatcher" target="_blank" rel="noopener">UniPatcher</a> لدمج الباتش على الجوال</li>
+            <li>أندرويد <span class="latin">9</span> أو أحدث — ومساحة إضافية نحو <span class="latin">3&nbsp;GB</span></li>
           </ul>
-          <p class="dl__note" id="dl-android-note">نسخة الأندرويد قيد التجهيز ولم تُرفع بعد — تابع قنوات الفريق ليصلك الإعلان. خطوات التثبيت جاهزة في الأسفل وستنطبق فور صدورها.</p>
+          <p class="dl__meta">
+            ملف الدلتا <span class="latin">OmoriAR_patch.xdelta</span> ·
+            الحجم <span data-site="size-android">153 م.ب</span> ·
+            صدر في <span data-site="date-android">30 سبتمبر 2026</span>
+          </p>
+          <p class="dl__note" id="dl-android-note">تعريب الأندرويد يوزَّع كملف «دلتا» لا كتطبيق جاهز: تدمجه بنفسك في نسخة اللعبة الإنجليزية عبر <span class="latin">UniPatcher</span>، فيخرج منه تطبيق أوموري كامل بالعربية.</p>
           <p class="dl__steps-hint">خطوات التثبيت في الأسفل ↓</p>
-          <button class="btn btn--ghost dl__btn" type="button" data-download="android" aria-describedby="dl-android-note">نسخة الأندرويد — قريباً</button>
+          <button class="btn btn--primary dl__btn" type="button" data-download="android" aria-describedby="dl-android-note">حمّل دلتا الأندرويد</button>
         </article>
       </div>
 
@@ -303,13 +307,16 @@
           </ol>
         </article>
         <article class="dl reveal">
-          <h3 class="dl__title">أندرويد <span class="dl__badge dl__badge--soon">قريباً</span></h3>
+          <h3 class="dl__title">أندرويد</h3>
           <ol class="dl__steps">
-            <li>حمّل ملف <span class="latin">APK</span> من قسم التحميل.</li>
-            <li>ثبّته كأي تطبيق (فعّل «مصادر غير معروفة» إن طُلب منك).</li>
-            <li>شغّل اللعبة — كل شيء بالعربية من أول إقلاع.</li>
+            <li>نزّل ملف الدلتا <span class="latin">OmoriAR_patch.xdelta</span> من قسم التحميل.</li>
+            <li>نزّل نسخة أوموري الإنجليزية للأندرويد (البورت غير الرسمي <span class="latin">v1.0.8.1</span>) — ولا بدّ أن تكون نسخة أصلية بلا أي تعديل، فهي الأساس الذي بُني عليه الباتش.</li>
+            <li>ثبّت تطبيق <a class="latin dl-link" href="https://play.google.com/store/apps/details?id=org.emunix.unipatcher" target="_blank" rel="noopener">UniPatcher</a> من جوجل بلاي.</li>
+            <li>افتح فيه <span class="latin">Apply patch</span> واختر الملفات الثلاثة: <span class="latin">Patch file</span> ← ملف الدلتا، و<span class="latin">ROM file</span> ← نسخة اللعبة الإنجليزية، و<span class="latin">Output file</span> ← اسم النسخة المعدّلة ومكانها.</li>
+            <li>اضغط زر الدمج وانتظر حتى ينتهي — سيخرج لك ملف <span class="latin">APK</span> جديد هو أوموري بالعربية.</li>
+            <li>ثبّت الملف الجديد (فعّل «تثبيت من مصادر غير معروفة» إن طُلب منك)، ثم شغّل اللعبة — كل شيء بالعربية من أول إقلاع.</li>
           </ol>
-          <p class="dl__note">هذه الخطوات تخص نسخة الأندرويد، وهي قيد التجهيز. إن وصلك أي ملف <span class="latin">APK</span> من خارج قنوات الفريق الرسمية فلا تثبته.</p>
+          <p class="dl__note">إن فشل الدمج فالسبب في الغالب أن النسخة معدّلة أو بإصدار مختلف — الباتش يعمل على النسخة الأصلية المطابقة فقط. ولا تثبّت أي <span class="latin">APK</span> جاهز من خارج قنوات الفريق.</p>
         </article>
       </div>
     </div>
@@ -478,6 +485,12 @@
           <ul class="creds__names" role="list">
             <li><span class="latin">kitsou</span></li>
             <li>بلاك <span class="cred-alias">(أونكس)</span></li>
+          </ul>
+        </div>
+        <div class="creds__group">
+          <h3 class="creds__role">نقل التعريب</h3>
+          <ul class="creds__names" role="list">
+            <li><span class="latin">Akai</span></li>
           </ul>
         </div>
         <div class="creds__group">
