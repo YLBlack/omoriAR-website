@@ -1,17 +1,17 @@
 /* =========================================================
-   تعريب أوموري – main.js
+   تعريب أوموري — main.js
    Vanilla, dependency-free. Everything is progressive:
    with JS unavailable the page still reads and shows images.
    ========================================================= */
 
 /* ---------------------------------------------------------
-   SITE – the single place to edit release facts.
+   SITE — the single place to edit release facts.
    The HTML already carries these values (so a JS-less
    visitor sees them too); this object keeps every page in
    sync from one edit.
 
    A data-site attribute names a path into this object —
-   "build", or "size-pc" for SITE.size.pc – and every value
+   "build", or "size-pc" for SITE.size.pc — and every value
    shaped { ar, en } follows the language of the page.
 
    An empty link means "not published yet": the button then
@@ -41,13 +41,13 @@ const IS_RTL = document.documentElement.dir === 'rtl';
 
 const T = {
   ar: {
-    linkSoon: 'الرابط غير متاح حالياً – تابع قنوات الفريق ليصلك الإعلان.',
+    linkSoon: 'الرابط غير متاح حالياً — تابع قنوات الفريق ليصلك الإعلان.',
     starting: 'جارٍ بدء التحميل...',
     started: 'بدأ التحميل. إن لم يبدأ خلال ثوانٍ اضغط الزر مرة أخرى، وخطوات التثبيت في الأسفل.',
     play: 'تشغيل',
     pause: 'إيقاف مؤقت',
     replay: 'شغّل المقطع',
-    fail: 'تعذّر التشغيل – جرّب مجدداً',
+    fail: 'تعذّر التشغيل — جرّب مجدداً',
     lightboxLabel: 'عرض اللقطات',
     close: 'إغلاق',
     prev: 'اللقطة السابقة',
@@ -56,13 +56,13 @@ const T = {
     shotAlt: 'لقطة من التعريب',
   },
   en: {
-    linkSoon: 'That file is not available right now – follow the team channels for the announcement.',
+    linkSoon: 'That file is not available right now — follow the team channels for the announcement.',
     starting: 'Starting download...',
     started: 'Download started. If nothing happens in a few seconds, press the button again. Install steps are below.',
     play: 'Play',
     pause: 'Pause',
     replay: 'Play again',
-    fail: "Couldn't play – try again",
+    fail: "Couldn't play — try again",
     lightboxLabel: 'Screenshot viewer',
     close: 'Close',
     prev: 'Previous screenshot',
@@ -295,7 +295,7 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
     shots = shots || $$('.shot');
     if (!shots.length) return;
 
-    // the script hides them first, never the stylesheet – so a script that never
+    // the script hides them first, never the stylesheet — so a script that never
     // runs leaves every screenshot visible instead of blank
     shots.forEach((shot) => shot.classList.add('is-pending'));
 
@@ -582,7 +582,7 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
     revealEls.forEach((el) => {
-      // whatever is already on screen reveals on this very frame – the hero is
+      // whatever is already on screen reveals on this very frame — the hero is
       // the largest thing we paint, so it must never wait for the observer
       const box = el.getBoundingClientRect();
       if (box.top < window.innerHeight && box.bottom > 0) el.classList.add('is-in');
