@@ -1,17 +1,17 @@
 /* =========================================================
-   تعريب أوموري — main.js
+   تعريب أوموري – main.js
    Vanilla, dependency-free. Everything is progressive:
    with JS unavailable the page still reads and shows images.
    ========================================================= */
 
 /* ---------------------------------------------------------
-   SITE — the single place to edit release facts.
+   SITE – the single place to edit release facts.
    The HTML already carries these values (so a JS-less
    visitor sees them too); this object keeps every page in
    sync from one edit.
 
    A data-site attribute names a path into this object —
-   "build", or "size-pc" for SITE.size.pc — and every value
+   "build", or "size-pc" for SITE.size.pc – and every value
    shaped { ar, en } follows the language of the page.
 
    An empty link means "not published yet": the button then
@@ -33,7 +33,7 @@ const SITE = {
     pc: { ar: '28 سبتمبر 2026', en: '28 September 2026' },
     android: { ar: '30 سبتمبر 2026', en: '30 September 2026' },
   },
-  updated: { ar: 'سبتمبر 2026', en: 'September 2026' },
+  updated: { ar: 'أكتوبر 2026', en: 'October 2026' },
 };
 
 const LANG = document.documentElement.lang === 'en' ? 'en' : 'ar';
@@ -41,11 +41,13 @@ const IS_RTL = document.documentElement.dir === 'rtl';
 
 const T = {
   ar: {
-    linkSoon: 'الرابط غير متاح حالياً — تابع قنوات الفريق ليصلك الإعلان.',
+    linkSoon: 'الرابط غير متاح حالياً – تابع قنوات الفريق ليصلك الإعلان.',
+    starting: 'جارٍ بدء التحميل...',
+    started: 'بدأ التحميل. إن لم يبدأ خلال ثوانٍ اضغط الزر مرة أخرى، وخطوات التثبيت في الأسفل.',
     play: 'تشغيل',
     pause: 'إيقاف مؤقت',
     replay: 'شغّل المقطع',
-    fail: 'تعذّر التشغيل — جرّب مجدداً',
+    fail: 'تعذّر التشغيل – جرّب مجدداً',
     lightboxLabel: 'عرض اللقطات',
     close: 'إغلاق',
     prev: 'اللقطة السابقة',
@@ -54,11 +56,13 @@ const T = {
     shotAlt: 'لقطة من التعريب',
   },
   en: {
-    linkSoon: 'That file is not available right now — follow the team channels for the announcement.',
+    linkSoon: 'That file is not available right now – follow the team channels for the announcement.',
+    starting: 'Starting download...',
+    started: 'Download started. If nothing happens in a few seconds, press the button again. Install steps are below.',
     play: 'Play',
     pause: 'Pause',
     replay: 'Play again',
-    fail: "Couldn't play — try again",
+    fail: "Couldn't play – try again",
     lightboxLabel: 'Screenshot viewer',
     close: 'Close',
     prev: 'Previous screenshot',
@@ -95,22 +99,26 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
 
   const dlMsg = $('#dl-msg');
 
-  function showDlMsg(text) {
+  function showDlMsg(text, focus = true) {
     if (!dlMsg) return;
     dlMsg.textContent = text;
     dlMsg.hidden = false;
-    dlMsg.focus?.({ preventScroll: true });
+    if (focus) dlMsg.focus?.({ preventScroll: true });
   }
 
+  // the buttons are real <a href> links in the HTML (work without JS, middle-click,
+  // copy link). SITE.links stays the single source: it re-syncs the href, and an
+  // empty link turns the click into the "not available yet" message.
   $$('[data-download]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const key = btn.getAttribute('data-download');
-      const url = SITE.links[key];
-      if (url) {
-        window.open(url, '_blank', 'noopener');
-      } else {
-        showDlMsg(t.linkSoon);
-      }
+    const url = SITE.links[btn.getAttribute('data-download')];
+    if (url) btn.setAttribute('href', url);
+    const label = btn.textContent;
+    btn.addEventListener('click', (e) => {
+      if (!url) { e.preventDefault(); showDlMsg(t.linkSoon); return; }
+      btn.classList.add('is-busy');
+      btn.textContent = t.starting;
+      showDlMsg(t.started, false);
+      setTimeout(() => { btn.classList.remove('is-busy'); btn.textContent = label; }, 3500);
     });
   });
 
@@ -215,7 +223,6 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         if (nav.classList.contains('is-open')) closeMenu();
-        else if (lightbox && lightbox.classList.contains('is-open')) closeLightbox();
       }
       if (e.key === 'Tab' && nav.classList.contains('is-open')) {
         const focusables = [toggle, ...$$('a', nav)];
@@ -288,7 +295,7 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
     shots = shots || $$('.shot');
     if (!shots.length) return;
 
-    // the script hides them first, never the stylesheet — so a script that never
+    // the script hides them first, never the stylesheet – so a script that never
     // runs leaves every screenshot visible instead of blank
     shots.forEach((shot) => shot.classList.add('is-pending'));
 
@@ -358,12 +365,19 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
 
     // swipe on touch devices
     let startX = null;
-    el.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    let startY = 0;
+    let multi = false;
+    el.addEventListener('touchstart', (e) => {
+      multi = e.touches.length > 1;           // a pinch is a zoom, never a swipe
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
     el.addEventListener('touchend', (e) => {
       if (startX === null) return;
       const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
       startX = null;
-      if (Math.abs(dx) < 42) return;
+      if (multi || Math.abs(dx) < 42 || Math.abs(dy) > Math.abs(dx)) return;
       const forward = IS_RTL ? dx > 0 : dx < 0;
       step(forward ? 1 : -1);
     }, { passive: true });
@@ -414,6 +428,11 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
     const next = (Number(lightbox.dataset.index || 0) + delta + items.length) % items.length;
     lightbox.dataset.index = String(next);
     renderLightbox();
+    const frame = $('.lightbox__frame', lightbox);
+    frame.style.setProperty('--dx', `${delta * (IS_RTL ? -1 : 1) * 28}px`);
+    frame.classList.remove('slide');
+    void frame.offsetWidth;                   // restart the animation
+    frame.classList.add('slide');
   }
 
   function renderLightbox() {
@@ -430,6 +449,15 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
     $('.lightbox__cap', lightbox).textContent = cap ? cap.textContent.trim() : '';
     $('.lightbox__counter', lightbox).textContent = t.counter(Number(lightbox.dataset.index || 0) + 1, items.length);
     lightbox.querySelectorAll('.lightbox__nav').forEach((b) => { b.hidden = items.length < 2; });
+    // warm the cache for both neighbours so the next swipe is instant
+    if (items.length > 1) {
+      const at = Number(lightbox.dataset.index || 0);
+      [-1, 1].forEach((d) => {
+        const nb = items[(at + d + items.length) % items.length];
+        const m = ((nb && $('img', nb).getAttribute('srcset')) || '').match(/(\S+\.webp) 960w/);
+        if (m) new Image().src = m[1];
+      });
+    }
   }
 
   if (grid) {
@@ -490,19 +518,55 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
 
   const layers = $$('.stars__layer');
   let starRaf = 0;
+  let starX = 0;
+  let starY = 0;
+  let starScroll = 0;
+
+  function paintStars() {
+    starRaf = 0;
+    layers.forEach((layer) => {
+      const depth = parseFloat(layer.dataset.depth) || 0.5;
+      const x = -starX * depth;
+      const y = -starY * depth - starScroll * depth * 0.22;
+      layer.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+    });
+  }
+  const queueStars = () => { if (!starRaf) starRaf = requestAnimationFrame(paintStars); };
 
   if (!prefersReducedMotion && layers.length) {
     window.addEventListener('pointermove', (e) => {
-      cancelAnimationFrame(starRaf);
-      starRaf = requestAnimationFrame(() => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 18;
-        const y = (e.clientY / window.innerHeight - 0.5) * 12;
-        layers.forEach((layer) => {
-          const depth = parseFloat(layer.dataset.depth) || 0.5;
-          layer.style.transform = `translate(${(-x * depth).toFixed(1)}px, ${(-y * depth).toFixed(1)}px)`;
-        });
-      });
+      starX = (e.clientX / window.innerWidth - 0.5) * 18;
+      starY = (e.clientY / window.innerHeight - 0.5) * 12;
+      queueStars();
     }, { passive: true });
+    // scrolling past the hero also drifts the sky, so phones get the effect too
+    window.addEventListener('scroll', () => {
+      starScroll = Math.min(window.scrollY, window.innerHeight * 1.2);
+      queueStars();
+    }, { passive: true });
+  }
+
+  /* ---------- hero line types itself out, like a dialogue box ---------- */
+
+  const heroSub = $('.hero__sub');
+  if (heroSub && !prefersReducedMotion) {
+    const full = heroSub.textContent.trim();
+    heroSub.style.minHeight = `${heroSub.offsetHeight}px`;   // no layout jump while it types
+    heroSub.textContent = '';
+    const sr = document.createElement('span');                // screen readers get the whole line at once
+    sr.className = 'visually-hidden';
+    sr.textContent = full;
+    const vis = document.createElement('span');
+    vis.setAttribute('aria-hidden', 'true');
+    heroSub.append(sr, vis);
+    let n = 0;
+    // one text node, never one span per letter: Arabic letters must stay joined
+    const tick = () => {
+      n += 1;
+      vis.textContent = full.slice(0, n);
+      if (n < full.length) setTimeout(tick, 24);
+    };
+    setTimeout(tick, 700);
   }
 
   /* ---------- reveal on scroll ---------- */
@@ -518,7 +582,7 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
     revealEls.forEach((el) => {
-      // whatever is already on screen reveals on this very frame — the hero is
+      // whatever is already on screen reveals on this very frame – the hero is
       // the largest thing we paint, so it must never wait for the observer
       const box = el.getBoundingClientRect();
       if (box.top < window.innerHeight && box.bottom > 0) el.classList.add('is-in');
@@ -554,6 +618,8 @@ function $$(sel, root = document) { return Array.from(root.querySelectorAll(sel)
   }
 
   if (counters.length && 'IntersectionObserver' in window) {
+    // start from 0 right away so the final number never flashes before the count-up
+    if (!prefersReducedMotion) counters.forEach((el) => { el.textContent = '0'; });
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
